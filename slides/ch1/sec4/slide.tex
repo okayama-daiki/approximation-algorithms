@@ -104,14 +104,14 @@
 			\end{itemize}
 			\structure{性質}
 			\begin{itemize}
-				\item \(V \setminus U\) は独立集合\footnote{\(u, v \in V \setminus U \Rightarrow (u, v) \notin E\)}\footnote{\(\Rightarrow\) は明らか。では逆は？？}
+				\item \(V \setminus U\) は独立集合\footnote{\(u, v \in V \setminus U \Rightarrow (u, v) \notin E\)}
 			\end{itemize}
 		\end{column}
 		\begin{column}{0.6\textwidth}
 			\begin{figure}
 				\centering
 				\includegraphics[width=0.65\textwidth]{figures/vertex-cover.png}
-				\caption{ある点集合 \(U_1, U_2\) とそれらの補集合によって誘導されるグラフ。（\(U_1\) は点カバー、\(U_2\) は点カバーでない）}
+				\caption{点集合 \(U_1, U_2\) とそれらの補集合によって誘導されるグラフ（\(U_1\) は点カバー、\(U_2\) は点カバーでない）}
 			\end{figure}
 		\end{column}
 	\end{columns}
@@ -312,38 +312,42 @@
 \begin{frame}{Q3. 2 未満の近似比を達成するアルゴリズムは存在するか？}
 	\structure{A3. 近似アルゴリズムの分野での代表的な未解決公開問題 \cite{vazirani2010}}
 	\begin{itemize}
-		\item 例えば、次数の高い頂点を優先的に選ぶアルゴリズムは？
+		\item 例えば、次数の大きい頂点を優先的に選ぶアルゴリズムは？
 	\end{itemize}
 \end{frame}
 
 \appendix
 
-% \begin{frame}{最小点カバー問題と最大マッチング問題}
-% 	\begin{quote}
-% 		最小頂点被覆問題は、整数計画問題に定式化でき、その双対問題は最大マッチング問題である。\cite{wikipedia2021}
-% 	\end{quote}
+\begin{frame}{貪欲的なアルゴリズムが最適解を出力しないインスタンス \cite{epsilon2024}}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.6\textwidth]{figures/greedy-fails.png}
+		\caption{貪欲的なアルゴリズムが最適解を出力しないインスタンス}
+	\end{figure}
+\end{frame}
 
-% 	\begin{columns}[t]
-% 		\begin{column}{0.5\textwidth}
-% 			\begin{align*}
-% 				 & \text{min.}  & \sum_{v \in V} x_v                           \\
-% 				 & \text{s.t. } & x_u + x_v \ge 1    &  & \forall (u, v) \in E \\
-% 				 &              & x_v \in \{0, 1\}   &  & \forall v \in V
-% 			\end{align*}
-% 		\end{column}
-% 		\begin{column}{0.5\textwidth}
-% 			\begin{align*}
-% 				 & \text{min.}  & \sum_{u,v \in E} y_{uv}                                                   \\
-% 				 & \text{s.t. } & \sum_{u,v \in E : u=v' \lor v=v' } y_{uv} \le 1 &  & \forall v' \in V     \\
-% 				 &              & y_{uv} \in \{0, 1\}                             &  & \forall (u, v) \in E
-% 			\end{align*}
-% 		\end{column}
-% 	\end{columns}
-% \end{frame}
+\begin{frame}{最小点カバー問題と最大マッチング問題}
+	\begin{quote}
+		最小頂点被覆問題は、整数計画問題に定式化でき、その双対問題は最大マッチング問題である。\cite{wikipedia2021}
+	\end{quote}
 
-% \begin{frame}{NP-completeness}
-
-% \end{frame}
+	\begin{columns}[t]
+		\begin{column}{0.5\textwidth}
+			\begin{align*}
+				 & \text{min.}  & \sum_{v \in V} x_v                           \\
+				 & \text{s.t. } & x_u + x_v \ge 1    &  & \forall (u, v) \in E \\
+				 &              & x_v \in \{0, 1\}   &  & \forall v \in V
+			\end{align*}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\begin{align*}
+				 & \text{min.}  & \sum_{u,v \in E} y_{uv}                                                   \\
+				 & \text{s.t. } & \sum_{u,v \in E : u=v' \lor v=v' } y_{uv} \le 1 &  & \forall v' \in V     \\
+				 &              & y_{uv} \in \{0, 1\}                             &  & \forall (u, v) \in E
+			\end{align*}
+		\end{column}
+	\end{columns}
+\end{frame}
 
 \begin{frame}[allowframebreaks]{References}
 	\printbibliography{}
