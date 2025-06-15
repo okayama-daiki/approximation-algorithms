@@ -1,0 +1,152 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Packages
+\usepackage{amsthm}        % For theorems
+\usepackage{amsmath}       % For math
+\usepackage{luatexja}      % For Japanese
+\usepackage{booktabs}      % For formal tables
+\usepackage{mathtools}
+\usepackage{amssymb}       % For checkmark
+\usepackage{ulem}          % For strikeout
+\usepackage[noend]{algpseudocode}
+\usepackage[backend=biber,
+            style=alphabetic,
+            sorting=none
+            ]{biblatex}    % For bibliography
+\usepackage{tikz}          % For figures
+\usepackage{multirow}      % For multirow in tables
+\usetikzlibrary{arrows.meta,
+                chains,
+                positioning}
+
+\newcommand{\checkbox}[1]{%
+  \ifnum#1=1
+    \makebox[0pt][l]{\raisebox{0.15ex}{\hspace{0.1em}$\checkmark$}}%
+  \fi
+  $\square$%
+}
+
+\addbibresource{references.bib}
+
+% Beamer settings
+\setbeamertemplate{theorems}[numbered]
+\addtobeamertemplate{theorem begin}{\normalfont}{}
+\newtheorem*{sproof}{Sketch of the proof.}
+\newtheorem{remark}{Remark}
+\newtheorem{algorithm}{Algorithm}
+
+% Theme
+\usetheme{metropolis}
+\usecolortheme{default}
+\metroset{block=fill}
+
+% Fonts
+\setbeamerfont{title}{size=\large,series=\bfseries}
+\setbeamerfont{theorem}{shape=\upshape}
+\usefonttheme{professionalfonts}
+\usefonttheme{structurebold}
+\setbeamerfont{title}{size=\LARGE}
+\setbeamerfont{date}{size=\small}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+\usepackage[T1]{fontenc}
+\usepackage{mlmodern}
+\usepackage{luatexja-otf}
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+\renewcommand{\familydefault}{\sfdefault}
+
+% Metadata
+\title{3.4 ナップサック問題に対する FPTAS}
+\subtitle{近似アルゴリズム ―離散最適化問題への効果的アプローチ― pp.68--73}
+\author{岡山 大輝}
+\institute{兵庫県立大学大学院 情報科学研究科\textit{(ad25r010@guh.u-hyogo.ac.jp)}}
+\date{June 30, 2025}
+
+% \AtBeginSection[]
+% {
+%   \begin{frame}{目次}
+%     \tableofcontents[currentsection]
+%   \end{frame}
+% }
+
+\begin{document}
+
+\begin{frame}
+	\titlepage{}
+\end{frame}
+
+\begin{frame}{ナップサック問題}
+	\vskip 1em
+
+	\begin{problem}[ナップサック問題]
+	\begin{itemize}
+		\leftskip 3em
+		\item[Input: ] \(\boldsymbol{a}, \boldsymbol{c} \in \mathbb{Z}^n_{\ge0}, b \in \mathbb{Z}_{\ge0}\)
+		\item[Output: ] \(\boldsymbol{x} \in \{0, 1\}^n\) such that
+		      \[
+			      \alert{\boldsymbol{x}^T \boldsymbol{a} \leq b} \quad \text{and} \quad \alert{\boldsymbol{x}^T \boldsymbol{c} \text{ is maximized.}}
+		      \]
+	\end{itemize}
+	\end{problem}
+
+	\begin{theorem}[ナップサック問題の擬多項式時間アルゴリズム]
+		ナップサック問題に対して、\(\mathcal{O}(n^2 \max_i(c_i))\) 時間で最適解を求めるアルゴリズムが存在する。
+	\end{theorem}
+
+	\begin{theorem}[\alert{ナップサック問題の FPTAS}]
+		ナップサック問題に対して、任意の正数 \(\epsilon < 1\) に対し、\alert{\(\mathcal{O}(n^3/\epsilon)\)} 時間で \alert{\((1 - \epsilon)\)} 倍の近似解を求めるスキームが存在する。
+	\end{theorem}
+\end{frame}
+
+\begin{frame}{ウォームアップ：ナップサック問題に対する貪欲的アルゴリズム}
+	\begin{algorithm}[貪欲的アルゴリズム]
+		\begin{itemize}
+			\item アイテムを\alert{単位価値 \(c_i / a_i\) の降順にソート}
+			\item アイテムを順に選択し、ナップサックの容量を超えないように追加
+		\end{itemize}
+	\end{algorithm}
+
+	\begin{remark}[貪欲的アルゴリズムの近似比]
+		いかなる正の定数 \(\delta < 1\) に対しても、貪欲的アルゴリズムは \alert{近似保証 \(1 - \delta\)} を達成しない。
+	\end{remark}
+
+	\textbf{Proof.}
+	任意に選択したナップサックのサイズ \(b \in \mathbb{Z}_+\) に対して、\(\boldsymbol{a} = (\alert{1}, b), \boldsymbol{c} = (\alert{b + 1}, b^2)\) と定める。
+	単位価値 \(\boldsymbol{c} / \boldsymbol{a}\) が \(\boldsymbol{c} / \boldsymbol{a} = (\alert{b + 1}, b)\) であることに注意すると、
+	このインスタンスに対する貪欲的アルゴリズムの近似率は、
+	\[
+		\frac{\alert{\textrm{ALG}}}{\textrm{OPT}} = \frac{\alert{b + 1}}{b^2} = \frac{1}{b} + \frac{1}{b^2}
+	\]
+	となる。\qed
+
+\end{frame}
+
+\begin{frame}{ナップサック問題と擬多項式時間アルゴリズム}
+
+\end{frame}
+
+\begin{frame}{ナップサック問題に対する FPTAS}
+	\begin{block}{Key Idea}
+		\begin{itemize}
+			\item \(C = poly(n)\) であるとき、\(n\) の多項式時間で最適解は求まる
+			\item \(c_1, c_2, \ldots, c_n\) をスケールダウンさせることで、
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}{NP-hardness}
+
+\end{frame}
+
+\begin{frame}{Strongly Np-hardness}
+
+\end{frame}
+
+\begin{frame}{}
+
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+	\printbibliography{}
+\end{frame}
+
+\end{document}
