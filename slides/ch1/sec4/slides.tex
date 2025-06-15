@@ -6,6 +6,7 @@
 \usepackage{luatexja}      % For Japanese
 \usepackage{booktabs}      % For formal tables
 \usepackage{amssymb}       % For checkmark
+\usepackage{ulem}          % For strikeout
 \usepackage[noend]{algpseudocode}
 \usepackage[backend=biber,
             style=alphabetic,
@@ -151,7 +152,7 @@
 		\item しかし最適解を求めることはおろか、最適値を求めることでさえ $\mathcal{NP}$-困難
 	\end{itemize}
 
-	解決策：\alert{多項式時間で計算可能な下界を最適解の値の代わりに用いる（下界スキーム）}
+	解決策：\alert{\sout{多項式時間で計算可能な}下界を最適解の値の代わりに用いる（下界スキーム）}
 	\begin{figure}
 		\centering
 		\includegraphics[width=1.4\textwidth]{figures/lower-bounding-scheme.png}
@@ -252,6 +253,10 @@
 		アルゴリズムの時間計算量は \(\mathcal{O}(|V| + |E|)\) である。
 	\end{remark}
 	\begin{itemize}
+		\item マッチング辺の管理のためのデータ構造の初期化 \(\mathcal{O}(|V|)\)
+		      \begin{itemize}
+			      \item 各頂点に対して、マッチングに含まれているかどうかを記録する配列を用意
+		      \end{itemize}
 		\item すべての辺を 1 度ずつ走査する \(\mathcal{O}(|E|)\)
 		\item 各辺について、端点が既にマッチングに含まれているかどうか確認する \(\mathcal{O}(1)\)
 	\end{itemize}
@@ -270,11 +275,11 @@
 
 	\begin{example}[アルゴリズムの近似保証 2 のタイトな例]
 		\begin{columns}
-			\begin{column}{0.5\textwidth}
+			\begin{column}{0.45\columnwidth}
 				完全 2 部グラフ \(K_{n, n}\) の無限個のインスタンスの族に対して、\\
 				アルゴリズムが出力する解の近似率は 2 である。
 			\end{column}
-			\begin{column}{0.5\textwidth}
+			\begin{column}{0.45\columnwidth}
 				\begin{figure}
 					\centering
 					\includegraphics[width=0.8\textwidth]{figures/complete-bipertitle.png}
@@ -291,13 +296,13 @@
 	\structure{A2. 設計できない。（最適値の下界として極大マッチングを用いる限りは）}
 	\begin{example}
 		\begin{columns}
-			\begin{column}{0.5\textwidth}
+			\begin{column}{0.45\columnwidth}
 				\(n\) を奇数とすると、
 				完全グラフ \(K_n\) の無限個のインスタンスの族に対して、\\
-				極大マッチングの辺数は \(\frac{n-1}{2}\) であるが、\\
+				極大マッチングの辺数は \(\frac{n-1}{2}\)、\\
 				最小点カバーの点数は \(n-1\) である。
 			\end{column}
-			\begin{column}{0.5\textwidth}
+			\begin{column}{0.45\columnwidth}
 				\begin{figure}
 					\centering
 					\includegraphics[width=0.9\textwidth]{figures/complete.png}
