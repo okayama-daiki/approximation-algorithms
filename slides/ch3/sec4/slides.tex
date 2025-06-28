@@ -68,6 +68,14 @@
 	\titlepage{}
 \end{frame}
 
+\begin{frame}{導入}
+	\structure{\alert{重さの上限}の中で\alert{価値の和を最大}にする組み合わせは？}
+	\begin{figure}
+		\centering
+		\includegraphics[width=1.0\textwidth]{figures/knapsack-problem.png}
+	\end{figure}
+\end{frame}
+
 \begin{frame}{ナップサック問題}
 	\vskip 1em
 
@@ -77,19 +85,17 @@
 		\item[Input: ] \(\boldsymbol{a}, \boldsymbol{c} \in \mathbb{Z}^n_{+}, b \in \mathbb{Z}_{+}\)
 		\item[Output: ] \(\boldsymbol{x} \in \{0, 1\}^n\) such that
 		      \[
-			      \alert{\boldsymbol{x}^T \boldsymbol{a} \leq b} \quad \text{and} \quad \alert{\boldsymbol{x}^T \boldsymbol{c} \text{ is maximized.}}
+			      \alert{\boldsymbol{a}^T \boldsymbol{x} \leq b} \quad \text{and} \quad \alert{\boldsymbol{c}^T \boldsymbol{x} \text{ is maximized.}}
 		      \]
 	\end{itemize}
 	\end{problem}
 
-	\begin{theorem}[ナップサック問題の擬多項式時間アルゴリズム]
-		ナップサック問題に対して、\(\mathcal{O}(n^2 \max_i(c_i))\) 時間で最適解を求めるアルゴリズムが存在する。
-	\end{theorem}
-
-	\begin{theorem}[\alert{ナップサック問題の FPTAS}]
-		ナップサック問題に対して、任意の正数 \(\epsilon < 1\) に対し、\alert{\(\mathcal{O}(n^3/\epsilon)\)} 時間で \alert{\((1 - \epsilon)\)} 倍の近似解を求めるスキームが存在する。
-	\end{theorem}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.75\textwidth]{figures/knapsack-problem-formally.png}
+	\end{figure}
 \end{frame}
+
 
 \begin{frame}{ウォームアップ：ナップサック問題に対する貪欲的アルゴリズム}
 	\vskip 0.5em
@@ -101,14 +107,25 @@
 		\end{itemize}
 	\end{algorithm}
 
+	\only<1>{
+
+		\vskip 0.5em
+
+		\begin{figure}
+			\centering
+			\includegraphics[width=1.0\textwidth]{figures/greedy.png}
+		\end{figure}
+	}
+	\pause
+
 	\begin{remark}[貪欲的アルゴリズムの近似比]
-		任意の正の定数 \(\delta < 1\) に対して、貪欲的アルゴリズムは\alert{近似保証 \(1 - \delta\)} を達成しない。
+		いかなる正の定数 \(\delta < 1\) であっても、貪欲的アルゴリズムは\alert{近似保証 \(1 - \delta\) を達成できない}。
 	\end{remark}
 
 	\textbf{Proof.}
 	任意に選択したナップサックのサイズ \(b \in \mathbb{Z}_+\) に対して、\(\boldsymbol{a} = (\alert{1}, b), \boldsymbol{c} = (\alert{b + 1}, b^2)\) と定める。
 	単位価値が \(\boldsymbol{c} \oslash \boldsymbol{a} = (\alert{b + 1}, b)\) であることに注意すると、
-	このインスタンスに対する貪欲的アルゴリズムの出力解の近似率は、
+	このインスタンスに対して貪欲的アルゴリズムが出力する解の近似率は、
 	\[
 		\frac{\alert{\textrm{ALG}}}{\textrm{OPT}} = \frac{\alert{b + 1}}{b^2} \xrightarrow[b \to \infty]{} 0
 	\]
@@ -117,80 +134,82 @@
 \end{frame}
 
 \begin{frame}{振り返り：ナップサック問題に対する動的計画法}
+	\vskip 0.5em
 
+	\begin{theorem}[ナップサック問題の擬多項式時間アルゴリズム]
+		ナップサック問題に対して、\alert{\(\mathcal{O}(n^2 C)\) 時間}で\alert{最適解}を求めるアルゴリズムが存在する。
+		ただし、\(C = \max_i{c_i}\) とする。
+	\end{theorem}
+
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\textwidth]{figures/dp.png}
+	\end{figure}
 \end{frame}
 
 \begin{frame}{本日のメイン：ナップサック問題に対する FPTAS}
-	\begin{block}{Key Idea}
-		\begin{itemize}
-			\item \(C = poly(n)\) のとき、\(n\) の多項式時間で最適解は求まる
-			\item \(c_1, c_2, \ldots, c_n\) を適切にスケールダウンする
-		\end{itemize}
-	\end{block}
+	% \begin{block}{Key Idea}
+	% 	\begin{itemize}
+	% 		\item \(C = poly(n)\) のとき、\(n\) の多項式時間で最適解は求まる\footnote{\(C = \max_i{c_i}\)}
+	% 		\item \(c_1, c_2, \ldots, c_n\) を適切にスケールダウンする
+	% 	\end{itemize}
+	% \end{block}
 
-	\begin{scheme}[Ibbara and Kim \cite{ibarra1975}]
+	\begin{theorem}[\alert{ナップサック問題の FPTAS}]
+		ナップサック問題に対して、任意の正数 \(\epsilon < 1\) に対し、\alert{\(\mathcal{O}(n^3/\epsilon)\)} 時間で \alert{\((1 - \epsilon)\)} 倍の近似解を求めるスキームが存在する。
+	\end{theorem}
+
+	\begin{scheme}
 		\begin{itemize}
-			\item 与えられた \(0 < \epsilon < 1\) に対し、\alert{\(K = \epsilon \max_i(c_i) / n\)} を定める
-			\item 価値を \alert{\(c_i' = \lfloor c_i / K \rfloor\)} で修正する\footnote{\(\lfloor n / \epsilon \rfloor \le c_i'\) になることに注意する。}
+			\item 与えられた \(0 < \epsilon < 1\) に対し、\alert{\(K = \epsilon C / n\)} を定める
+			\item 価値を \alert{\(c_i' = \lfloor c_i / K \rfloor\)} で修正する\footnote{このとき、\(c_i' \le \lfloor n / \epsilon \rfloor\) になることに注意する。}
 			\item 修正価値のもとで、動的計画法を適用する
 		\end{itemize}
 	\end{scheme}
 \end{frame}
 
-\begin{frame}{動作例}
+\begin{frame}{動作例：\(\epsilon = 0.3\) の場合}
+	\structure{なお、実際の最適解は \(\boldsymbol{x}^* = (1, 1, 0)^T\) で、このときの価値は \(\boldsymbol{c}^T \boldsymbol{x}^* = \alert{31}\) である。}
+
+	\vskip 1em
+
 	\begin{figure}
 		\centering
-		\includegraphics[width=1.0\textwidth]{figures/ibarra1975.png}
-		\caption{Ibbara and Kim \cite{ibarra1975} の FPTAS の動作例 (\(n=3, \epsilon=0.3\))}
+		\includegraphics[width=1.0\textwidth]{figures/fptas.png}
 	\end{figure}
+
 \end{frame}
 
-\begin{frame}{動作例（大きい \(\epsilon\) の場合）}
-	\begin{figure}
-		\centering
-		\includegraphics[width=1.0\textwidth]{figures/ibarra1975.png}
-		\caption{Ibbara and Kim \cite{ibarra1975} の FPTAS の動作例 (\(n=3, \epsilon=0.3\))}
-	\end{figure}
-\end{frame}
-
-\begin{frame}{動作例（小さい \(\epsilon\) の場合）}
-	\begin{figure}
-		\centering
-		\includegraphics[width=1.0\textwidth]{figures/ibarra1975.png}
-		\caption{Ibbara and Kim \cite{ibarra1975} の FPTAS の動作例 (\(n=3, \epsilon=0.3\))}
-	\end{figure}
-\end{frame}
-
-\begin{frame}{Ibbara and Kim \cite{ibarra1975} のスキーマの近似保証}
+\begin{frame}{スキーマの近似保証}
 	\begin{block}{近似保証}
-		Ibarra and Kim \cite{ibarra1975} のスキーマが出力する解 \(\boldsymbol{x'}\) は、次式を満たす。
+		スキーマが出力する解 \(\boldsymbol{x'}\) は、次式を満たす。
 		\[
-			\alert{\boldsymbol{x'}^T \boldsymbol{c} \geq (1 - \epsilon) \cdot{\boldsymbol{x}^*}^T \boldsymbol{c}}
+			\alert{\boldsymbol{c}^T \boldsymbol{x'} \geq (1 - \epsilon) \cdot{\boldsymbol{c}}^T \boldsymbol{x^*}}
 		\]
 	\end{block}
 
-	\textbf{Sketch of the Proof.}
+	\textbf{Proof.}
 	\[
-		\boldsymbol{x'}^T \boldsymbol{c} \geq K \cdot \boldsymbol{x'}^T \boldsymbol{c'} \geq K \cdot \boldsymbol{x^*}^T \boldsymbol{c'} \geq \boldsymbol{x^*}^T \boldsymbol{c} - nK = \boldsymbol{x^*}^T \boldsymbol{c} - \epsilon \cdot \max_i(c_i) \geq (1 - \epsilon) \cdot{\boldsymbol{x}^*}^T \boldsymbol{c}
+		\boldsymbol{c}^T \boldsymbol{x'} \geq K \cdot \boldsymbol{c'}^T \boldsymbol{x'} \geq K \cdot \boldsymbol{c'}^T \boldsymbol{x^*} \geq \boldsymbol{c}^T \boldsymbol{x^*} - nK = \boldsymbol{c}^T \boldsymbol{x^*} - \epsilon \cdot C \geq (1 - \epsilon) \cdot{\boldsymbol{c}}^T \boldsymbol{x^*}
 	\]
-
+	\qed
 \end{frame}
 
-\begin{frame}{Ibbara and Kim \cite{ibarra1975} のスキーマの計算時間}
+\begin{frame}{スキーマの計算時間}
 	\begin{block}{計算時間}
-		Ibbara and Kim \cite{ibarra1975} のスキーマは、\alert{\(\mathcal{O}(n^3 / \epsilon)\)} 時間で動作する。
+		スキーマは、\alert{\(\mathcal{O}(n^3 / \epsilon)\)} 時間で動作する。
 	\end{block}
 
 	\textbf{Proof.}
 	\begin{itemize}
-		\item アイテムの価値をスケールダウンするのに \(\mathcal{O}(n)\) 時間
-		\item 動的計画法の計算時間\footnote{\(K = \epsilon \max_i(c_i) / n\)}は、\(\mathcal{O}(n^2 \max_i(c_i')) = \alert{\mathcal{O}(n^2 \max_i(c_i) / K) = \mathcal{O}(n^3 / \epsilon)}\) \qed
+		\item アイテムの価値をスケールダウン\footnote{\(c'_i = \lfloor c_i / K\rfloor, K = \epsilon C / n\)}するのに \(\mathcal{O}(n)\) 時間
+		\item 動的計画法の計算時間は、\(\mathcal{O}(n^2 \max_i\{c'_i\}) = (\mathcal{O}(n^2 \max_i\{c_i / K\})=) \alert{\mathcal{O}(n^2 C / K) = \mathcal{O}(n^3 / \epsilon)}\) \qed
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{\(\mathbf{NP}\)-hardness}
+\begin{frame}{\(\mathcal{NP}\)-hardness}
 	\begin{theorem}
-		ナップサック問題は \(\mathbf{NP}\)-hard である。
+		ナップサック問題は \(\mathcal{NP}\)-hard である。
 	\end{theorem}
 
 	\begin{problem}[分割問題]
@@ -205,7 +224,7 @@
 	\end{problem}
 
 	\begin{theorem}[Nakagawa et al. (2025)]
-		分割問題は \(\mathbf{NP}\)-hard である。
+		分割問題は \(\mathcal{NP}\)-hard である。
 	\end{theorem}
 \end{frame}
 
@@ -213,13 +232,9 @@
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.8\textwidth]{figures/reduction.png}
-		\caption{分割問題からナップサック問題への帰着}
 	\end{figure}
 \end{frame}
 
-\begin{frame}{Strongly \(\mathbf{NP}\)-hardness}
-
-\end{frame}
 
 \begin{frame}[allowframebreaks]{References}
 	\printbibliography{}

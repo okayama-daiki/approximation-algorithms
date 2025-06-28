@@ -1,0 +1,58 @@
+<mxfile host="65bd71144e" scale="4" border="0">
+    <diagram id="QSRl1Uf1947GPoZLRj66" name="Page-1">
+        <mxGraphModel dx="644" dy="809" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="1" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="44" value="" style="ellipse;whiteSpace=wrap;html=1;strokeColor=none;dashed=1;sketch=1;curveFitting=1;jiggle=2;fillColor=#CCCCCC;fillStyle=hachure;" parent="1" vertex="1">
+                    <mxGeometry x="270" y="220" width="570" height="320" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="" style="sketch=1;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=default;fillColor=#666666;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.concepts.marketplace_shopping_bag;aspect=fixed;curveFitting=1;jiggle=2;gradientColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="920" y="300" width="117.39" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" style="edgeStyle=none;html=1;rounded=0;curved=1;dashed=1;" parent="1" source="20" target="43" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="650" y="120"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="20" value="&lt;div&gt;&lt;font style=&quot;font-size: 15px;&quot; face=&quot;Comic Sans MS&quot;&gt;\(a_1=1\)&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 15px;&quot; face=&quot;Comic Sans MS&quot;&gt;\(c_1=15\)&lt;/font&gt;" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;sketch=1;curveFitting=1;jiggle=2;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="330" y="300" width="90" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" style="edgeStyle=none;html=1;rounded=0;curved=1;sketch=1;curveFitting=1;jiggle=2;dashed=1;" parent="1" source="23" target="43" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="840" y="180"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="22" value="&lt;div&gt;&lt;font style=&quot;font-size: 15px;&quot; face=&quot;Comic Sans MS&quot;&gt;\(a_2=2\)&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 15px;&quot; face=&quot;Comic Sans MS&quot;&gt;\(c_2=15\)&lt;/font&gt;" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;sketch=1;curveFitting=1;jiggle=2;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="460" y="300" width="130" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="&lt;div&gt;&lt;font style=&quot;font-size: 15px;&quot; face=&quot;Comic Sans MS&quot;&gt;\(a_3=3\)&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 15px;&quot; face=&quot;Comic Sans MS&quot;&gt;\(c_3=25\)&lt;/font&gt;" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;sketch=1;curveFitting=1;jiggle=2;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="300" width="170" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" style="edgeStyle=none;html=1;sketch=1;curveFitting=1;jiggle=2;rounded=0;curved=1;dashed=1;" parent="1" source="34" target="43" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="670" y="650"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="34" value="&lt;div&gt;&lt;font style=&quot;font-size: 15px;&quot; face=&quot;Comic Sans MS&quot;&gt;\(a_4=2\)&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 15px;&quot; face=&quot;Comic Sans MS&quot;&gt;\(c_4=20\)&lt;/font&gt;" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;sketch=1;curveFitting=1;jiggle=2;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="390" y="400" width="130" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="&lt;div&gt;&lt;font style=&quot;font-size: 15px;&quot; face=&quot;Comic Sans MS&quot;&gt;\(a_5=4\)&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;font-size: 15px;&quot; face=&quot;Comic Sans MS&quot;&gt;\(c_5=35\)&lt;/font&gt;" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;sketch=1;curveFitting=1;jiggle=2;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="570" y="400" width="200" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="&lt;font style=&quot;font-size: 25px;&quot; face=&quot;Comic Sans MS&quot;&gt;&lt;b style=&quot;&quot;&gt;\(b=6\)&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="923.7" y="375" width="110" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="&lt;div style=&quot;text-wrap-mode: wrap;&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot; face=&quot;Comic Sans MS&quot;&gt;\(\boldsymbol{x} = (1, 0, 1, 1, 0)^T\)&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="760" y="490" width="360" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
