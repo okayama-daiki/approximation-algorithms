@@ -70,7 +70,7 @@
 	\titlepage{}
 \end{frame}
 
-\begin{frame}{導入}
+\begin{frame}{導入：ナップサック問題への招待}
 	\structure{\alert{重さの上限}の中で\alert{価値の和を最大}にする組み合わせは？}
 	\begin{figure}
 		\centering
@@ -97,7 +97,6 @@
 		\includegraphics[width=0.75\textwidth]{figures/knapsack-problem-formally.png}
 	\end{figure}
 \end{frame}
-
 
 \begin{frame}{ウォームアップ：ナップサック問題に対する貪欲的アルゴリズムの近似比}
 	\vskip 0.5em
@@ -163,20 +162,32 @@
 
 	\begin{scheme}
 		\begin{itemize}
-			\item 与えられた \(0 < \varepsilon < 1\) に対し、\alert{\(K = \varepsilon C / n\)} を定める\footnote{\(C = \max_i{c_i}\), \(n\) はアイテムの総数}
+			\item 与えられた \(0 < \varepsilon < 1\) に対し、\alert{\(K = \varepsilon C / n\)} を定める\footnote{\(C (= \max_i{c_i})\) は商品の最大価値, \(n\) は商品の総数}
 			\item 価値を \alert{\(c_i' = \lfloor c_i / K \rfloor\)} で修正する\footnote{このとき、\(c_i' \le \lfloor n / \varepsilon \rfloor\) になることに注意する}
 			\item 修正価値のもとで、動的計画法を適用する
 		\end{itemize}
 	\end{scheme}
 \end{frame}
 
-\begin{frame}{スキーマの動作例：\(\varepsilon = 0.3\) の場合}
+\begin{frame}{スキーマの動作例：\(\varepsilon = 0.3\) の場合 }
 	\vskip 1em
 
-	\begin{figure}
-		\centering
-		\includegraphics[width=1.0\textwidth]{figures/fptas.png}
-	\end{figure}
+	\only<1>{
+
+		\begin{figure}
+			\centering
+			\includegraphics[width=1.0\textwidth]{figures/fptas.png}
+		\end{figure}
+	}
+
+	\only<2>{
+		\begin{figure}
+			\centering
+			\includegraphics[width=1.0\textwidth]{figures/fptas-vs-optimal.png}
+		\end{figure}
+	}
+
+	\pause
 
 	\structure{なお、実際の最適解は \info{\(\boldsymbol{x}^* = (1, 1, 0)^T\)} で、このときの価値は \info{\(\boldsymbol{c}^T \boldsymbol{x}^* = 31\)} である。}
 
@@ -185,16 +196,16 @@
 \begin{frame}{スキーマの近似保証}
 	\vskip 1em
 
-	\begin{block}{スキーマの近似保証}
+	\begin{lemma}[スキーマの近似保証]
 		スキーマが出力する解 \(\boldsymbol{x'}\) は、次式を満たす。
 		\[
 			\alert{\boldsymbol{c}^T \boldsymbol{x'} \geq (1 - \varepsilon) \cdot{\boldsymbol{c}}^T \boldsymbol{x^*}}
 		\]
-	\end{block}
+	\end{lemma}
 
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.8\textwidth]{figures/fptas-vs-optimal.png}
+		\includegraphics[width=0.8\textwidth]{figures/fptas-proof/0.png}
 	\end{figure}
 \end{frame}
 
@@ -324,16 +335,25 @@
 
 			\only<5>{
 				\begin{itemize}
-					\item \(K\) の定義による
+					\item \(K\) の定義から、\(nK = n\cdot \varepsilon C/n = \varepsilon C\)
 				\end{itemize}
+
+				\begin{figure}
+					\centering
+					\includegraphics[width=1.0\textwidth]{figures/fptas-proof/4.png}
+				\end{figure}
 			}
 
 			\only<6>{
 				\begin{itemize}
-					\item 最適値は、最も価値の高い商品の価値以上であるはず \(C \le \boldsymbol{c}^T\boldsymbol{x^*}\)\footnote{すべての商品の重みはナップサックの容量以下であることを仮定}
+					\item 最適値は、商品の最高価値以上であるはず\footnote{すべての商品の重みはナップサックの容量以下であることを仮定}
 				\end{itemize}
-			}
 
+				\begin{figure}
+					\centering
+					\includegraphics[width=0.95\textwidth]{figures/fptas-proof/5.png}
+				\end{figure}
+			}
 		\end{column}
 
 		\begin{column}{0.35\columnwidth}
@@ -354,9 +374,9 @@
 \end{frame}
 
 \begin{frame}{スキーマの計算時間}
-	\begin{block}{計算時間}
+	\begin{lemma}[スキーマの計算時間]
 		スキーマは、\alert{\(\mathcal{O}(n^3 / \varepsilon)\)} 時間で動作する。
-	\end{block}
+	\end{lemma}
 
 	\textbf{Proof.}
 	\begin{itemize}
@@ -364,6 +384,18 @@
 		\item 動的計画法の計算時間は、\(\mathcal{O}(n^2 \max_i\{c'_i\})\footnote{\(\mathcal{O}(n^2 \max_i\{c'_i\}) = \mathcal{O}(n^2 \max_i\{c_i / K\})\) に注意} = \alert{\mathcal{O}(n^2 C / K) = \mathcal{O}(n^3 / \varepsilon)}\) \qed
 	\end{itemize}
 \end{frame}
+
+\begin{frame}{まとめ}
+	\begin{theorem}[(restaed) \alert{ナップサック問題の FPTAS}]
+		ナップサック問題に対して、任意の正数 \(\varepsilon < 1\) に対し、\alert{\(\mathcal{O}(n^3/\varepsilon)\)} 時間で \alert{\((1 - \varepsilon)\)} 倍の近似解を求めるスキームが存在する。
+	\end{theorem}
+\end{frame}
+
+\begin{frame}[standout]
+	Any Questions?
+\end{frame}
+
+\appendix{}
 
 \begin{frame}{\(\mathcal{NP}\)-hardness}
 	\begin{theorem}
@@ -381,7 +413,7 @@
 	\end{itemize}
 	\end{problem}
 
-	\begin{theorem}[Nakagawa et al. (2025)]
+	\begin{theorem}
 		分割問題は \(\mathcal{NP}\)-hard である。
 	\end{theorem}
 \end{frame}
@@ -392,7 +424,6 @@
 		\includegraphics[width=0.8\textwidth]{figures/reduction.png}
 	\end{figure}
 \end{frame}
-
 
 \begin{frame}[allowframebreaks]{References}
 	\printbibliography{}
