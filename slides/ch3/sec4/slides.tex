@@ -106,7 +106,7 @@
 	\begin{algorithm}[貪欲的アルゴリズム]
 		\begin{itemize}
 			\item アイテムを\alert{単位価値 \(c_i / a_i\) の降順にソート}
-			\item アイテムを順に選択し、ナップサックの容量を超えないように追加
+			\item アイテムを順に選択し，ナップサックの容量を超えないように追加
 		\end{itemize}
 	\end{algorithm}
 
@@ -122,17 +122,17 @@
 	\pause
 
 	\begin{remark}[貪欲的アルゴリズムの近似比]
-		いかなる正の定数 \(\delta < 1\) であっても、貪欲的アルゴリズムは\alert{近似保証 \(1 - \delta\) を達成できない}。
+		いかなる正の定数 \(\delta < 1\) であっても，貪欲的アルゴリズムは\alert{近似保証 \(1 - \delta\) を達成できない}．
 	\end{remark}
 
 	\textbf{Proof.}
-	任意に選択したナップサックのサイズ \(b \in \mathbb{Z}_+\) に対して、\(\boldsymbol{a} = (\alert{1}, b), \boldsymbol{c} = (\alert{b + 1}, b^2)\) と定める。
-	単位価値が \(\boldsymbol{c} \oslash \boldsymbol{a} = (\alert{b + 1}, b)\) であることに注意すると、
-	このインスタンスに対して貪欲的アルゴリズムが出力する解の近似率は、
+	任意に選択したナップサックのサイズ \(b \in \mathbb{Z}_+\) に対して，\(\boldsymbol{a} = (\alert{1}, b), \boldsymbol{c} = (\alert{b + 1}, b^2)\) と定める．
+	単位価値が \(\boldsymbol{c} \oslash \boldsymbol{a} = (\alert{b + 1}, b)\) であることに注意すると，
+	このインスタンスに対して貪欲的アルゴリズムが出力する解の近似率は，
 	\[
 		\frac{\alert{\textrm{ALG}}}{\textrm{OPT}} = \frac{\alert{b + 1}}{b^2} \xrightarrow[b \to \infty]{} 0
 	\]
-	となる。\qed
+	となる．\qed
 
 \end{frame}
 
@@ -140,8 +140,8 @@
 	\vskip 0.5em
 
 	\begin{theorem}[ナップサック問題の擬多項式時間アルゴリズム]
-		ナップサック問題に対して、\alert{\(\mathcal{O}(n^2 C)\) 時間}で\alert{最適解}を求めるアルゴリズムが存在する。
-		ただし、\(C = \max_i{c_i}\) とする。
+		ナップサック問題に対して，\alert{\(\mathcal{O}(n^2 C)\) 時間}で\alert{最適解}を求めるアルゴリズムが存在する．
+		ただし，\(C = \max_i{c_i}\) とする．
 	\end{theorem}
 
 	\only<1>{
@@ -169,20 +169,20 @@
 \begin{frame}{本日のメイン：ナップサック問題に対する FPTAS}
 	% \begin{block}{Key Idea}
 	% 	\begin{itemize}
-	% 		\item \(C = poly(n)\) のとき、\(n\) の多項式時間で最適解は求まる\footnote{\(C = \max_i{c_i}\)}
+	% 		\item \(C = poly(n)\) のとき，\(n\) の多項式時間で最適解は求まる\footnote{\(C = \max_i{c_i}\)}
 	% 		\item \(c_1, c_2, \ldots, c_n\) を適切にスケールダウンする
 	% 	\end{itemize}
 	% \end{block}
 
 	\begin{theorem}[\alert{ナップサック問題の FPTAS}]
-		ナップサック問題に対して、任意の正数 \(\varepsilon < 1\) に対し、\alert{\(\mathcal{O}(n^3/\varepsilon)\)} 時間で \alert{\((1 - \varepsilon)\)} 倍の近似解を求めるスキームが存在する。
+		ナップサック問題に対して，任意の正数 \(\varepsilon < 1\) に対し，\alert{\(\mathcal{O}(n^3/\varepsilon)\)} 時間で \alert{\((1 - \varepsilon)\)} 倍の近似解を求めるスキームが存在する．
 	\end{theorem}
 
 	\begin{scheme}
 		\begin{itemize}
-			\item 与えられた \(0 < \varepsilon < 1\) に対し、\alert{\(K = \varepsilon C / n\)} を定める\footnote{\(C (= \max_i{c_i})\) は商品の最大価値, \(n\) は商品の総数}
-			\item 価値を \alert{\(c_i' = \lfloor c_i / K \rfloor\)} で修正する\footnote{このとき、\(c_i' \le \lfloor n / \varepsilon \rfloor\) になることに注意する}
-			\item 修正価値のもとで、動的計画法を適用する
+			\item 与えられた \(0 < \varepsilon < 1\) に対し，\alert{\(K = \varepsilon C / n\)} を定める\footnote{\(C (= \max_i{c_i})\) は商品の最大価値, \(n\) は商品の総数}
+			\item 価値を \alert{\(c_i' = \lfloor c_i / K \rfloor\)} で修正する\footnote{このとき，\(c_i' \le \lfloor n / \varepsilon \rfloor\) になることに注意する}
+			\item 修正価値のもとで，動的計画法を適用する
 		\end{itemize}
 	\end{scheme}
 \end{frame}
@@ -207,7 +207,7 @@
 
 	\pause
 
-	\structure{なお、実際の最適解は \info{\(\boldsymbol{x}^* = (1, 1, 0)^T\)} で、このときの価値は \info{\(\boldsymbol{c}^T \boldsymbol{x}^* = 31\)} である。}
+	\structure{なお，実際の最適解は \info{\(\boldsymbol{x}^* = (1, 1, 0)^T\)} で，このときの価値は \info{\(\boldsymbol{c}^T \boldsymbol{x}^* = 31\)} である．}
 
 \end{frame}
 
@@ -215,7 +215,7 @@
 	\vskip 1em
 
 	\begin{lemma}[スキームの近似保証]
-		スキームが出力する解 \(\boldsymbol{x'}\) は、次式を満たす。
+		スキームが出力する解 \(\boldsymbol{x'}\) は，次式を満たす．
 		\[
 			\alert{\boldsymbol{c}^T \boldsymbol{x'} \geq (1 - \varepsilon) \cdot{\boldsymbol{c}}^T \boldsymbol{x^*}}
 		\]
@@ -353,7 +353,7 @@
 
 			\only<5>{
 				\begin{itemize}
-					\item \(K\) の定義から、\(nK = n\cdot \varepsilon C/n = \varepsilon C\)
+					\item \(K\) の定義から，\(nK = n\cdot \varepsilon C/n = \varepsilon C\)
 				\end{itemize}
 
 				\begin{figure}
@@ -364,7 +364,7 @@
 
 			\only<6>{
 				\begin{itemize}
-					\item 元の問題の最適値 \(\boldsymbol{c}^T\boldsymbol{x^*}\) は、商品の最高価値 \(C\) 以上であるはず\footnote{すべての商品の重みはナップサックの容量以下であることを仮定}
+					\item 元の問題の最適値 \(\boldsymbol{c}^T\boldsymbol{x^*}\) は，商品の最高価値 \(C\) 以上であるはず\footnote{すべての商品の重みはナップサックの容量以下であることを仮定}
 				\end{itemize}
 
 				\begin{figure}
@@ -393,19 +393,19 @@
 
 \begin{frame}{スキームの計算時間}
 	\begin{lemma}[スキームの計算時間]
-		スキームは、\alert{\(\mathcal{O}(n^3 / \varepsilon)\)} 時間で動作する。
+		スキームは，\alert{\(\mathcal{O}(n^3 / \varepsilon)\)} 時間で動作する．
 	\end{lemma}
 
 	\textbf{Proof.}
 	\begin{itemize}
 		\item アイテムの価値をスケールダウン\footnote{\(K = \varepsilon C / n, c'_i = \lfloor c_i / K\rfloor \le \lfloor n / \varepsilon \rfloor\)}するのに \(\mathcal{O}(n)\) 時間
-		\item 動的計画法の計算時間は、\(\mathcal{O}(n^2 \max_i\{c'_i\}) = \mathcal{O}(n^3 / \varepsilon)\) \qed
+		\item 動的計画法の計算時間は，\(\mathcal{O}(n^2 \max_i\{c'_i\}) = \mathcal{O}(n^3 / \varepsilon)\) \qed
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{まとめ}
 	\begin{theorem*}[restaed: \alert{ナップサック問題の FPTAS}]
-		ナップサック問題に対して、任意の正数 \(\varepsilon < 1\) に対し、\alert{\(\mathcal{O}(n^3/\varepsilon)\)} 時間で \alert{\((1 - \varepsilon)\)} 倍の近似解を求めるスキームが存在する。
+		ナップサック問題に対して，任意の正数 \(\varepsilon < 1\) に対し，\alert{\(\mathcal{O}(n^3/\varepsilon)\)} 時間で \alert{\((1 - \varepsilon)\)} 倍の近似解を求めるスキームが存在する．
 	\end{theorem*}
 \end{frame}
 
@@ -417,12 +417,12 @@
 
 \begin{frame}{ナップサックの容量に基づく擬多項式時間アルゴリズム}
 	\begin{theorem}[ナップサックの容量に基づく擬多項式時間アルゴリズム]
-		ナップサック問題に対して、\alert{\(\mathcal{O}(nb)\) 時間}で\alert{最適解}を求めるアルゴリズムが存在する。
+		ナップサック問題に対して，\alert{\(\mathcal{O}(nb)\) 時間}で\alert{最適解}を求めるアルゴリズムが存在する．
 	\end{theorem}
 
 	\begin{algorithm}[容量に基づく動的計画法]
 		\begin{itemize}
-			\item \(dp[i][j] := \) 商品 \(i\) までの中から、容量 \(j\) 以下で選んだときの価値の最大値
+			\item \(dp[i][j] := \) 商品 \(i\) までの中から，容量 \(j\) 以下で選んだときの価値の最大値
 			\item \(dp[0][:] = 0\)
 			\item \(
 			      dp[i][j] =
@@ -453,16 +453,16 @@
 \begin{frame}{FPTAS 再び？}
 
 	\begin{conjecture}[\alert{重みをスケールダウンさせる FPTAS}]
-		ナップサック問題に対して、任意の正数 \(\varepsilon < 1\) に対し、\alert{\(\mathcal{O}(n^3/\varepsilon)\)} 時間で \alert{\((1 - \varepsilon)\)} 倍の近似解を求める重みをスケールダウンするようなスキームが存在する？？？
+		ナップサック問題に対して，任意の正数 \(\varepsilon < 1\) に対し，\alert{\(\mathcal{O}(n^3/\varepsilon)\)} 時間で \alert{\((1 - \varepsilon)\)} 倍の近似解を求める重みをスケールダウンするようなスキームが存在する？？？
 	\end{conjecture}
 
 	\begin{scheme}[重みをスケールダウンさせるスキーム]
 		\begin{itemize}
-			\item 与えられた \(0 < \varepsilon < 1\) に対し、\alert{\(K = \varepsilon b / n\)} を定める
+			\item 与えられた \(0 < \varepsilon < 1\) に対し，\alert{\(K = \varepsilon b / n\)} を定める
 			\item 重みを \alert{\(a_i' = \lceil a_i / K \rceil\)} で修正する%
-			      \footnote{このとき、\(a'_i = \lceil n / \epsilon \cdot a_i / b\rceil \le \lceil n / \epsilon \rceil \) となる。}
-			\item 修正重みとナップサックの容量 \alert{\(\lfloor b / K \rfloor\)} のもとで、動的計画法を適用する%
-			      \footnote{このとき \(\boldsymbol{a'}^T\boldsymbol{x} \le \lfloor b / K\rfloor\) となる \(\boldsymbol{x}\) に対して、\(\boldsymbol{a}^T\boldsymbol{x} \le K \boldsymbol{a'}^T\boldsymbol{x} \le b\) を満たすことに注意する。}
+			      \footnote{このとき，\(a'_i = \lceil n / \epsilon \cdot a_i / b\rceil \le \lceil n / \epsilon \rceil \) となる．}
+			\item 修正重みとナップサックの容量 \alert{\(\lfloor b / K \rfloor\)} のもとで，動的計画法を適用する%
+			      \footnote{このとき \(\boldsymbol{a'}^T\boldsymbol{x} \le \lfloor b / K\rfloor\) となる \(\boldsymbol{x}\) に対して，\(\boldsymbol{a}^T\boldsymbol{x} \le K \boldsymbol{a'}^T\boldsymbol{x} \le b\) を満たすことに注意する．}
 		\end{itemize}
 	\end{scheme}
 \end{frame}
@@ -471,7 +471,7 @@
 	\vskip 1em
 
 	\begin{conjecture}[重みをスケールダウンさせるスキームの近似保証]
-		重みをスケールダウンさせるスキームが出力する解 \(\boldsymbol{x'}\) は、次式を満たす？？？
+		重みをスケールダウンさせるスキームが出力する解 \(\boldsymbol{x'}\) は，次式を満たす？？？
 		\[
 			\alert{\boldsymbol{c}^T \boldsymbol{x'} \geq (1 - \varepsilon) \cdot{\boldsymbol{c}}^T \boldsymbol{x^*}}
 		\]
@@ -479,20 +479,20 @@
 
 	\textbf{Idea of Proof?}
 	\begin{itemize}
-		\item スケーリングの誤差によって、近似解では高々 \(nK = \varepsilon b\) の空き容量が生じる
+		\item スケーリングの誤差によって，近似解では高々 \(nK = \varepsilon b\) の空き容量が生じる
 		\item 最適解と近似解における価値あたりの重みを導入する
 		      \[
 			      \boldsymbol{c}^T \boldsymbol{x^*} / \boldsymbol{a}^T \boldsymbol{x^*}, \quad
 			      \boldsymbol{c}^T \boldsymbol{x'} / \boldsymbol{a'}^T \boldsymbol{x'}
 		      \]
 		\item \(\boldsymbol{c}^T\boldsymbol{x'} \le \boldsymbol{c}^T\boldsymbol{x^*}\)
-		\item \(K a'_i \ge a_i\) より、\(\boldsymbol{a'}^T\boldsymbol{x} \ge K \boldsymbol{a}^T\boldsymbol{x}\) と \(c_i / a_i \le c_i / K a'_i\) が成り立つ
+		\item \(K a'_i \ge a_i\) より，\(\boldsymbol{a'}^T\boldsymbol{x} \ge K \boldsymbol{a}^T\boldsymbol{x}\) と \(c_i / a_i \le c_i / K a'_i\) が成り立つ
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{\(\mathcal{NP}\)-hardness}
 	\begin{theorem}
-		ナップサック問題は \(\mathcal{NP}\)-hard である。
+		ナップサック問題は \(\mathcal{NP}\)-hard である．
 	\end{theorem}
 
 	\begin{problem}[分割問題]
@@ -507,7 +507,7 @@
 	\end{problem}
 
 	\begin{theorem}
-		分割問題は \(\mathcal{NP}\)-hard である。
+		分割問題は \(\mathcal{NP}\)-hard である．
 	\end{theorem}
 \end{frame}
 
@@ -516,10 +516,6 @@
 		\centering
 		\includegraphics[width=0.8\textwidth]{figures/reduction.png}
 	\end{figure}
-\end{frame}
-
-\begin{frame}[allowframebreaks]{References}
-	\printbibliography{}
 \end{frame}
 
 \end{document}
