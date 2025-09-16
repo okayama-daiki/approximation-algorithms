@@ -16,17 +16,24 @@
             ]{biblatex}    % For bibliography
 \usepackage{tikz}          % For figures
 \usepackage{multirow}      % For multirow in tables
+\usepackage{thmtools}
+\usepackage{thm-restate}
 \usetikzlibrary{arrows.meta,
                 chains,
                 positioning}
+
 \addbibresource{references.bib}
+
+% Settings for bibliography
+\renewcommand*{\mkbibparens}[1]{\mkbibbrackets{#1}}
+\renewcommand*{\nameyeardelim}{\addcomma\space}
 
 % Custom commands
 \DeclareMathOperator{\interior}{int}
 \DeclareMathOperator{\sgn}{sgn}
 
 % Beamer settings
-\setbeamertemplate{theorems}[numbered]
+% \setbeamertemplate{theorems}[numbered]
 \addtobeamertemplate{theorem begin}{\normalfont}{}
 \newtheorem*{theorem*}{Theorem (restated)}
 \newtheorem*{lemma*}{Lemma (restated)}
@@ -34,7 +41,14 @@
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{observation}[theorem]{Observation}
 
+% \setbeameroption{hide notes}
+% \setbeameroption{show only notes}
+\setbeameroption{show notes on second screen=right}
+
+% includeonlyframes{current,current2,current3,current4}
+
 \newcommand{\info}[1]{\textcolor{ForestGreen}{#1}}
+\newcommand{\out}[1]{\textcolor{lightgray}{#1}}
 
 % Theme
 \usetheme{metropolis}
@@ -62,7 +76,7 @@
 \subtitle{近似アルゴリズム ―離散最適化問題への効果的アプローチ―}
 \author{岡山 大輝}
 \institute{兵庫県立大学大学院 情報科学研究科\textit{(ad25r010@guh.u-hyogo.ac.jp)}}
-\date{August 26, 2025}
+\date{August 26, 2025 \& September 16, 2025}
 
 \begin{document}
 
@@ -84,16 +98,9 @@
 \end{frame}
 
 \begin{frame}{本発表のテーマ}
-	\begin{theorem}[最大フロー最小カット定理]
+	\begin{restatable}[最大フロー最小カット定理]{theorem}{maxFlowMinCutTheorem}
 		任意の有向グラフにおいて，始点と終点が与えられたとき，\alert{最大フロー}の値は\alert{最小カット}の容量に等しい．
-	\end{theorem}
-
-	% \begin{itemize}
-	% 	\item 最大フロー問題を線形最適化問題として定式化する
-	% 	\item その双対問題が最小カット問題の整数最適化問題の LP-緩和であることを示す
-	% 	\item 双対問題が常に整数最適解をもつことを示す
-	% 	\item LP-双対定理を利用して，最大フローと最小カットの値が等しいことを示す
-	% \end{itemize}
+	\end{restatable}
 
 	\begin{figure}
 		\centering
@@ -110,7 +117,10 @@
 
 \begin{frame}{フローとカット}
 	有向グラフ \(G = (V, E)\) と各辺の容量 \(c: E \to \mathbb{R}_{+}\) が与えられる．
-	\begin{columns}
+
+	\vskip -0.5em
+
+	\begin{columns}[t]
 		\begin{column}{0.46\textwidth}
 			\begin{definition}[フロー]
 				フローとは，容量制約と流入流出制約を満たす関数 \alert{\(f : E \to \mathbb{R}_{\ge 0}\)} である．
@@ -178,7 +188,7 @@
 				      \Leftrightarrow
 				      \sum_{(j, i) \in E'} f_{ji} - \sum_{(i, j) \in E'} f_{ij} \alert{< 0}
 			      \]
-			\item しかし，左辺は常に 0 であるため矛盾が生じる
+			\item しかし，左辺は常に 0 であるため矛盾が生じる \qed
 		\end{itemize}
 	}
 \end{frame}
@@ -230,7 +240,7 @@
 
 \begin{frame}{双対問題を直感的に理解する}
 	\only<1>{
-		双対問題を直感的に理解するために，実数変数を\alert{二値変数}に置き換える．
+		双対問題を直感的に理解するため，変数を \([0, 1]\) に制限し，さらに整数制約を課す．
 		\begin{align}
 			 & \text{min.}   \quad &  & \sum_{(i, j) \in E} c_{ij} d_{ij}                           \\
 			 & \text{s.t.} \quad   &  & d_{ij} - p_i + p_j \geq 0 \quad   &  & \forall (i, j) \in E \\
@@ -282,16 +292,16 @@
 				0         & \text{otherwise}
 			\end{cases}
 		\]
-		となっているから，この整数最適化問題は\alert{最小 s-t カット問題}の定式化である．
+		となっているから，この整数最適化問題は\alert{最小 \(s\mathchar`-t\) カット問題}の定式化である．
 	}
 \end{frame}
 
 \begin{frame}{では元の双対問題は？}
 	\begin{remark}
-		最大フロー問題の双対問題は，最小 s-t カット問題の変数の整数制約と上界制約を除去した緩和問題とみなせる．
+		最大フロー問題の双対問題は，最小 \(s\mathchar`-t\) カット問題の変数の整数制約と上界制約を除去した緩和問題とみなせる．
 	\end{remark}
 
-	TODO: 時間があればあとでやる．
+	変数の上界制約を除いたとしても目的関数の真の改善は起きないことを示す．
 \end{frame}
 
 \begin{frame}{ここまでのまとめ}
@@ -303,9 +313,7 @@
 	これらの値の大小関係は？？？
 \end{frame}
 
-\againframe<3>{dual-formulation}
-
-\begin{frame}{小数版カット問題の行列表現}
+\begin{frame}{小数版カット問題の制約式の行列表現}
 	\begin{columns}
 		\begin{column}{0.4\textwidth}
 			\begin{align*}
@@ -324,12 +332,105 @@
 	\end{columns}
 \end{frame}
 
+\begin{frame}{例で見る小数版カット問題の制約式の行列表現}
+	\begin{example}[小数版カット問題の制約式]
+		\only<1>{
+			\begin{columns}[t]
+				\begin{column}{0.5\textwidth}
+					\small{
+						\begin{align*}
+							d_{ij} - p_i + p_j & \geq 0 & \forall (i, j) \in E \\
+							p_s - p_t          & \geq 1 &                      \\
+							d_{ij}             & \geq 0 & \forall (i, j) \in E \\
+							p_i                & \geq 0 & \forall i \in V
+						\end{align*}
+					}
+					\begin{figure}
+						\centering
+						\includegraphics[width=0.7\textwidth]{figures/fractional-cut-example.drawio.png}
+					\end{figure}
+				\end{column}
+				\begin{column}{0.0\textwidth}
+					\vskip 4em
+					\(\Rightarrow\)
+				\end{column}
+				\begin{column}{0.3\textwidth}
+					\begin{align*}
+						d_{s1} - p_s + p_1 & \geq 0 \\
+						d_{s2} - p_s + p_2 & \geq 0 \\
+						d_{1t} - p_1 + p_t & \geq 0 \\
+						d_{2t} - p_2 + p_t & \geq 0 \\
+						p_s - p_t          & \geq 1 \\
+						d_{s1}             & \geq 0 \\
+						\vdots             &        \\
+						p_s                & \geq 0 \\
+						\vdots             &        \\
+					\end{align*}
+				\end{column}
+			\end{columns}
+		}
+		\only<2>{
+			\begin{columns}
+				\begin{column}{0.3\textwidth}
+					\small{
+						\begin{align*}
+							d_{s1} - p_s + p_1 & \geq 0 \\
+							d_{s2} - p_s + p_2 & \geq 0 \\
+							d_{1t} - p_1 + p_t & \geq 0 \\
+							d_{2t} - p_2 + p_t & \geq 0 \\
+							p_s - p_t          & \geq 1 \\
+							d_{s1}             & \geq 0 \\
+							\vdots             &        \\
+							p_s                & \geq 0 \\
+							\vdots             &        \\
+						\end{align*}
+					}
+				\end{column}
+				\begin{column}{0.0\textwidth}
+					\(\Leftrightarrow\)
+				\end{column}
+				\begin{column}{0.6\textwidth}
+					\small{
+						\[
+							\begin{pmatrix}
+								1 & 0 & 0 & 0 & -1 & 1  & 0  & 0  \\
+								0 & 1 & 0 & 0 & -1 & 0  & 1  & 0  \\
+								0 & 0 & 1 & 0 & 0  & -1 & 0  & 1  \\
+								0 & 0 & 0 & 1 & 0  & 0  & -1 & 1  \\
+								0 & 0 & 0 & 0 & 1  & 0  & 0  & -1 \\
+								\hline
+								1 & 0 & 0 & 0 & 0  & 0  & 0  & 0  \\
+								0 & 1 & 0 & 0 & 0  & 0  & 0  & 0  \\
+								0 & 0 & 1 & 0 & 0  & 0  & 0  & 0  \\
+								0 & 0 & 0 & 1 & 0  & 0  & 0  & 0  \\
+								0 & 0 & 0 & 0 & 1  & 0  & 0  & 0  \\
+								0 & 0 & 0 & 0 & 0  & 1  & 0  & 0  \\
+								0 & 0 & 0 & 0 & 0  & 0  & 1  & 0  \\
+								0 & 0 & 0 & 0 & 0  & 0  & 0  & 1  \\
+							\end{pmatrix}
+							\begin{pmatrix}
+								d_{s1} \\ d_{s2} \\ d_{1t} \\ d_{2t} \\ p_s \\ p_1 \\ p_2 \\ p_t
+							\end{pmatrix}
+							\geq
+							\begin{pmatrix}
+								0 \\ 0 \\ 0 \\ 0 \\ 1 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0
+							\end{pmatrix}
+						\]
+					}
+				\end{column}
+			\end{columns}
+
+		}
+	\end{example}
+\end{frame}
+
 \begin{frame}{完全単模行列}
 	\begin{definition}[完全単模行列]
-		整数行列 \(A \in \mathbb{Z}^{m \times n}\) が\alert{完全単模行列}であるとは，\(A\) の任意の正方部分行列の行列式が \(0, +1, -1\) のいずれかであることをいう．
+		整数行列 \(A \in \mathbb{Z}^{m \times n}\) が\alert{完全単模行列}であるとは，\\
+		\(A\) の任意の正方部分行列の行列式が \(0, +1, -1\) のいずれかであることをいう．
 	\end{definition}
 
-	\begin{example}[完全単模行列の例]
+	\begin{example}[完全単模行列]
 		\[
 			\begin{pmatrix}
 				1 & 0 & 0 & 0 \\
@@ -349,7 +450,7 @@
 				0 & 1 & 0 & 0 & 1 \\
 				0 & 0 & 1 & 1 & 0 \\
 			\end{pmatrix}
-		\] はいずれも完全単模行列である．
+		\] はいずれも\alert{完全単模行列}である．
 	\end{example}
 \end{frame}
 
@@ -357,9 +458,9 @@
 	\begin{lemma}[完全単模行列の性質]
 		行列 \(A \in \mathbb{Z}^{m \times n}\) が完全単模行列であるとき，次が成り立つ．
 		\begin{enumerate}
-			\item \(-A\) は完全単模行列である．
-			\item \(A^{\top}\) は完全単模行列である．
-			\item 任意の単位行列 \(I\) を \(A\) の任意の列に追加して得られる行列 \([A \mid I]\) は完全単模行列である．
+			\item \alert{\(-A\) は完全単模行列}である．
+			\item \alert{\(A^{\top}\) は完全単模行列}である．
+			\item 単位行列 \(I_m\) を \(A\) に付け加えて得られる行列 \alert{\([A \mid I]\) は完全単模行列}である．
 		\end{enumerate}
 	\end{lemma}
 	\begin{lemma}[有向グラフの接続行列の完全単模性]
@@ -384,24 +485,30 @@
 		\item \(B\) に零行が含まれる場合，\(\det(B) = 0\)
 		\item \(B\) に 1 個の非零要素を持つ行が含まれる場合，その要素を含む行で展開して，帰納法の仮定より \(\det(B) = 0, +1, -1\)
 		\item それ以外の場合，\(B\) の各行は 2 個の非零要素を持つ．
-		      このとき，\(B\) の行ベクトルは線形従属であるため，\(\det(B) = 0\)
+		      このとき，\(B\) の行ベクトルは線形従属であるため，\(\det(B) = 0\) \qed
 	\end{itemize}
-	\qed
-
 \end{frame}
 
-\begin{frame}{完全単模行列における線形最適化問題の解の整数性}
-	\begin{theorem}[線形計画法の基本定理~\cite{bertsekas1995nonlinear}] %\label{thm:fundamental-theorem-of-linear-programming}
-		\(P\) を \(\mathbb{R}^n\) 上の凸多面体とし，1 つ以上の頂点を持つと仮定する．
-		このとき，ある線形関数が \(P\) 上で\alert{最小値}を取るならば，その値は \(P\) の\alert{頂点}のうちの 1 つで達成される．
-	\end{theorem}
-
-	\begin{theorem}[Hoffman-Kruskal の定理~\cite{hoffman2010integral}]
-		ある整数行列 \(A \in \mathbb{Z}^{m \times n}\) が\alert{完全単模行列}であるならば\footnote{なお実際のところ \cite{hoffman2010integral} では，必要十分条件であることが示されている．}，
-		任意の \(\boldsymbol{b} \in \mathbb{Z}^m\) に対する，多面体 \(\{ \boldsymbol{x} \in \mathbb{R}^n \mid A \boldsymbol{x} \le \boldsymbol{b}, \boldsymbol{x} \ge 0\}\) の頂点は\alert{整数ベクトル}である．
-	\end{theorem}
-
+\begin{frame}{完全単模行列を係数行列にもつ線形最適化問題の解の整数性}
 	\only<1>{
+		\vskip 1em
+
+		\begin{restatable}[線形計画法の基本定理~\cite{bertsekas1995nonlinear}]{theorem}{linearProgrammingFundamentalTheorem}
+			\(P\) を \(\mathbb{R}^n\) 上の凸多面体とし，1 つ以上の頂点を持つと仮定する．
+			このとき，ある線形関数が \(P\) 上で\alert{最小値}を取るならば，その値は \(P\) の\alert{頂点}のうちの 1 つで達成される．
+		\end{restatable}
+
+		\begin{figure}
+			\centering
+			\includegraphics[width=1.0\textwidth]{figures/linear-programming-fundamental-theorem.drawio.png}
+		\end{figure}
+	}
+
+	\only<2>{
+		\begin{restatable}[Hoffman-Kruskal の定理~\cite{hoffman2010integral}]{theorem}{hoffmanKruskalTheorem}
+			ある整数行列 \(A \in \mathbb{Z}^{m \times n}\) が\alert{完全単模行列}であるならば，またその時に限り，
+			任意の \(\boldsymbol{b} \in \mathbb{Z}^m\) に対する，多面体 \(\{ \boldsymbol{x} \in \mathbb{R}^n \mid A \boldsymbol{x} \le \boldsymbol{b}, \boldsymbol{x} \ge 0\}\) の頂点は\alert{整数ベクトル}である．
+		\end{restatable}
 		\begin{columns}
 			\begin{column}{0.5\textwidth}
 				\begin{figure}
@@ -419,7 +526,10 @@
 			\end{column}
 		\end{columns}
 	}
-	\only<2>{
+
+	\only<3>{
+		\linearProgrammingFundamentalTheorem*
+		\hoffmanKruskalTheorem*
 		\begin{corollary}[完全単模行列における線形最適化問題の解の整数性]
 			\(m \times n\) 行列 \(A\) が完全単模行列であり，\(\boldsymbol{b} \in \mathbb{Z}^m\) であれば，線形最適化問題 \[
 				\text{min.} \quad \boldsymbol{c}^{\top} \boldsymbol{x} \quad \text{s.t.} \quad A \boldsymbol{x} \le \boldsymbol{b}, \boldsymbol{x} \ge 0
@@ -429,12 +539,8 @@
 \end{frame}
 
 \begin{frame}{線形計画法の基本定理~\cite{bertsekas1995nonlinear} の証明}
-	\begin{theorem*}[線形計画法の基本定理~\cite{bertsekas1995nonlinear}]
-		\(P\) を \(\mathbb{R}^n\) 上の凸多面体とし，1 つ以上の頂点を持つと仮定する．
-		このとき，ある線形関数が \(P\) 上で\alert{最小値}を取るならば，その値は \(P\) の\alert{頂点}のうちの 1 つで達成される．
-	\end{theorem*}
+	\linearProgrammingFundamentalTheorem*
 
-	\small{
 	\only<1>{
 		\textbf{Proof.}
 		線形関数を \(f(\boldsymbol{x}) = \boldsymbol{c}^{\top} \boldsymbol{x}\) とし，最小値を達成する解のひとつを \(\boldsymbol{x}^*\) とする．
@@ -447,13 +553,13 @@
 			= \boldsymbol{c}^{\top} \left( \boldsymbol{x}^* - \frac{\epsilon}{2}\frac{\boldsymbol{c}}{||\boldsymbol{c}||} \right)
 			= \boldsymbol{c}^{\top} \boldsymbol{x}^* - \frac{\epsilon}{2} \frac{\boldsymbol{c}^{\top} \boldsymbol{c}}{||\boldsymbol{c}||}
 			= \boldsymbol{c}^{\top} \boldsymbol{x}^* - \frac{\epsilon}{2} ||\boldsymbol{c}|| < \boldsymbol{c}^{\top} \boldsymbol{x}^*\]
-		がいえるため，\alert{\(\boldsymbol{c}^{\top}\boldsymbol{x}^*\) の最小性に矛盾}する．
+		がいえるが，これは \alert{\(\boldsymbol{c}^{\top}\boldsymbol{x}^*\) の最小性に矛盾}する．
 	}
 
 	\only<2>{
 	\structure{次に，\(\boldsymbol{x}^*\) が \(P\) の頂点でないと仮定する．}
 
-	\(P\) の凸性から，\(x^*\) は \(P\) の頂点 \(\boldsymbol{v}_1, \boldsymbol{v}_2, \ldots, \boldsymbol{v}_k\) の凸結合として表される．すなわち，
+	\(P\) の凸性から，\(\boldsymbol{x}^*\) は \(P\) の頂点 \(\boldsymbol{v}_1, \boldsymbol{v}_2, \ldots, \boldsymbol{v}_k\) の凸結合として表される．すなわち，
 	\[\boldsymbol{x}^* = \sum_{i=1}^{k} \lambda_i \boldsymbol{v}_i, \quad \sum_{i=1}^{k} \lambda_i = 1, \quad \lambda_i \geq 0 \quad \forall i\]
 
 	このとき，\[
@@ -461,6 +567,28 @@
 		\left( \sum_{i=1}^{k} \lambda_i f(\boldsymbol{v}_i) \right) - f(\boldsymbol{x}^*) \underbrace{=}_{\mathclap{\raisebox{-1.5em}{\(\sum_{i=1}^{k} \lambda_i = 1\)}}}
 		\sum_{i=1}^{k} \lambda_i \left( f(\boldsymbol{v}_i) - f(\boldsymbol{x}^*) \right)
 	\]
+
+	\note{
+		\(\boldsymbol{x}^*\) は \(P\) の頂点 \(\boldsymbol{v}_1, \boldsymbol{v}_2, \ldots, \boldsymbol{v}_k\) の凸結合として表される．という点について，
+		\begin{proof}[凸多面体における頂点表現の存在]
+			凸多面体 $P$ の任意の点 $\boldsymbol{x}^* \in P$ について数学的帰納法で示す．
+
+			\textbf{Base case:} $\boldsymbol{x}^*$ が頂点の場合，自明に成立．
+
+			\textbf{Inductive step:} $\boldsymbol{x}^*$ が頂点でないとする．
+			頂点の定義により，$P$ の異なる2点 $\boldsymbol{y}, \boldsymbol{z} \in P$ と
+			$0 < \lambda < 1$ が存在して：
+			$$\boldsymbol{x}^* = \lambda \boldsymbol{y} + (1-\lambda) \boldsymbol{z}$$
+
+			$\boldsymbol{y}, \boldsymbol{z}$ のそれぞれについて：
+			- 頂点であれば終了
+			- 頂点でなければ，同様に分解
+
+			凸多面体の有限性により，この過程は必ず終了し，
+			頂点の凸結合が得られる．
+		\end{proof}
+
+	}
 	}
 
 	\only<3>{
@@ -474,15 +602,11 @@
 
 		ゆえに，\(P\) の頂点のうち，最小値を取る点が少なくとも 1 つ存在する．\qed
 	}
-	}
 
 \end{frame}
 
 \begin{frame}{Hoffman-Kruskal の定理~\cite{hoffman2010integral} の証明}
-	\begin{theorem*}[Hoffman-Kruskal の定理~\cite{hoffman2010integral}]
-		ある整数行列 \(A \in \mathbb{Z}^{m \times n}\) が\alert{完全単模行列}であるならば，
-		任意の \(\boldsymbol{b} \in \mathbb{Z}^m\) に対する，多面体 \(P = \{ \boldsymbol{x} \in \mathbb{R}^n \mid A \boldsymbol{x} \le \boldsymbol{b}, \boldsymbol{x} \ge \boldsymbol{0}\}\) の頂点は\alert{整数ベクトル}である．
-	\end{theorem*}
+	\hoffmanKruskalTheorem*
 
 	\small{
 		\textbf{Proof.}
@@ -494,19 +618,16 @@
 
 \end{frame}
 
-
-
 \begin{frame}[standout]
 	Coffee Break
 \end{frame}
 
 \begin{frame}{最大マッチングと最小点カバー}
-
 	\vskip 1em
 
-	\begin{corollary}[Konig の定理] % Kőnig's theorem
-		任意の二部グラフにおいて，\alert{最大マッチング}のサイズは\alert{最小点カバー}のサイズに等しい．
-	\end{corollary}
+	\begin{restatable}[Konig の定理]{corollary}{konigTheorem}
+		二部グラフにおける\alert{最大マッチング}のサイズは\alert{最小点カバー}のサイズに等しい．
+	\end{restatable}
 
 	\only<1>{
 		\begin{columns}
@@ -529,59 +650,37 @@
 	\only<2>{
 		\structure{Sketch of the proof.}
 
-		\begin{itemize}
-			\item 二部グラフ \(G\) から有向グラフ \(G'\) を構築する
-			\item 最大フロー最小カット定理と下記の事実を利用する
-			      \begin{itemize}
-				      \item \(G'\) の\alert{最大フロー}の値 = \(G\) の\alert{最大マッチング}のサイズ
-				      \item \(G'\) の\alert{最小カット}の容量 = \(G\) の\alert{最小点カバー}のサイズ
-			      \end{itemize}
-		\end{itemize}
-
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.9\textwidth]{figures/konig-theorem/proof-sketch.drawio.png}
+		\end{figure}
 		\vskip 1em
-
-		\begin{theorem*}[最大フロー最小カット定理]
-			任意の有向グラフにおいて，始点と終点が与えられたとき，\alert{最大フロー}の値は\alert{最小カット}の容量に等しい．
-		\end{theorem*}
 	}
 \end{frame}
 
 \begin{frame}{二部グラフ \(G\) からの有向グラフ \(G'\) を構成する方法}
-	\(G = (U \sqcup V, E)\) を二部グラフとする．有向グラフ \(G'\) を下記のように構成する．
-	\small{
-		\begin{itemize}
-			\item 頂点集合: \(V(G') = U \cup V \cup \{s, t\}\)
-			\item 辺集合: \(E(G') = \{(s, u) \mid u \in U\} \cup \{(u, v) \mid {u, v} \in E \land u \in U, v \in V\} \cup \{(v, t) \mid v \in V\}\)
-		\end{itemize}
-	}
+	二部グラフ \(G\) に対して，有向グラフ \(G'\) を下図のように構成する．
 
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.75\textwidth]{figures/konig-theorem/bipartite-to-directed.png}
-	\end{figure}
-\end{frame}
-
-\begin{frame}{最大フローと最大マッチングの関係}
-	\(G\) での任意のマッチングは，同じ流量を持つ \(G'\) でのフローに一意に対応する．
-
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.75\textwidth]{figures/konig-theorem/max-flow-max-matching.png}
+		\includegraphics[width=0.75\textwidth]{figures/konig-theorem/bipartite-to-directed.drawio.png}
 	\end{figure}
 
-	\centering{\alert{\(G\) の最大マッチングのサイズ = \(G'\) の最大フローの値}}
+	グラフ \(G\) に対して，頂点集合と辺集合をそれぞれ \(V(G)\) と \(E(G)\) と表現する．
 \end{frame}
 
-\begin{frame}{最小カットの最小点カバーの関係：\(G\) の最小点カバー \(\ge\) \(G'\) の最小カット}
+\begin{frame}{最小カットの最小点カバーの関係：最小点カバー \(\ge\) 最小カット}
+	\begin{remark}
+		\(G\) の任意の点カバー \(C\) に対して，\(G'\) のカット \((S, V(G') \setminus S)\) が存在して，\\
+		その容量が \(|C|\) 以下である．
+	\end{remark}
+
 	\only<1>{
-		\begin{block}{示すこと}
-			\(G\) の任意の点カバー \(X\) に対して，\(G'\) のカット \((S, V(G') \setminus S)\) が存在して，その容量が \(|X|\) 以下である．
-		\end{block}
-
-		\(G\) の任意の点カバー \(X\) を考える．
+		\textbf{Proof.}
+		\(G\) の任意の点カバー \(C\) を考える．
 		\begin{figure}
 			\centering
-			\includegraphics[width=0.6\textwidth]{figures/konig-theorem/01.png}
+			\includegraphics[width=0.2\textwidth]{figures/konig-theorem/cover-to-cut/arbitrary-cover.drawio.png}
 		\end{figure}
 	}
 
@@ -590,85 +689,219 @@
 			\begin{column}{0.4\textwidth}
 				\begin{figure}
 					\centering
-					\includegraphics[width=1.0\textwidth]{figures/konig-theorem/01.png}
+					\includegraphics[width=1.0\textwidth]{figures/konig-theorem/cover-to-cut/induced-edges.drawio.png}
 				\end{figure}
 			\end{column}
 			\begin{column}{0.6\textwidth}
 				\begin{itemize}
-					\item \(\info{E_X} = \{(s, u) \mid u \in U \land u \in X\} \cup \{(v, t) \mid v \in V \land v \in X\}\) と定める
-					\item \alert{\(S\)} を \info{\(E_X\)} の辺を \(G'\) から削除したときの \(s\) を含む連結成分と定める
-					\item[] \(\quad\quad\quad\quad\quad\quad\quad\quad \Downarrow\)
-					\item \((\alert{S}, V \setminus S)\) は \(G'\) の \(s-t\) カットであることがわかる\footnote{もし \(t \in V \setminus S\) であれば，\(X\) は点カバーではないことに注意する．}
-					\item \((\alert{S}, V\setminus S)\) の容量は \(|\info{E_X}| = |X|\) 以下である\footnote{\(\alert{S}\) から \(V \setminus S\) への辺が全て \info{\(E_X\)} に含まれることに注意する．}
-				\end{itemize}
-			\end{column}
-		\end{columns}
-	}
-\end{frame}
-
-
-\begin{frame}{最小カットの最小点カバーの関係：\(G\) の最小点カバー \(\le\) \(G'\) の最小カット}
-	\only<1>{
-		\begin{block}{示すこと}
-			\(G'\) の任意のカット \((S, V(G') \setminus S)\) に対して，\(G\) の点カバー \(X\) が存在して，そのサイズがカットの容量以下である．
-		\end{block}
-
-		\(G'\) の任意のカット \(C = (S, V(G') \setminus S)\) を考える．
-		\begin{figure}
-			\centering
-			\includegraphics[width=0.6\textwidth]{figures/konig-theorem/02.png}
-		\end{figure}
-	}
-
-	\only<2>{
-		\begin{columns}
-			\begin{column}{0.4\textwidth}
-				\begin{figure}
-					\centering
-					\includegraphics[width=1.0\textwidth]{figures/konig-theorem/03.png}
-				\end{figure}
-			\end{column}
-			\begin{column}{0.6\textwidth}
-				\begin{itemize}
-					\item \(\info{X} = \{u \in U \mid u \in S\} \cup \{v \in V \mid v \notin S\}\) と定める
-					\item \(\alert{X'}\) を \(X\) と \(G[(U \sqcup V) \setminus \info{X}]\) において出次数 1 以上の頂点との和集合と定める
-					\item[] \(\quad\quad\quad\quad\quad\quad\quad\quad \Downarrow\)
-					\item \(\alert{X'}\) は \(G\) の点カバーであることがわかる
-					\item \(C\) の容量は \(|\alert{X'}|\) 以下である
+					\item \info{\(E_c\)} を \(s\) または \(t\) を端点に持ち，もう片方の\\端点が \(C\) に属する辺の集合と定める
+					\item \out{\(E_c\) の辺を \(G'\) から削除したとき，\\\(s\) から到達可能な頂点の集合を \(S\) と定める}
 					      \begin{itemize}
-						      \item \(|\info{X}|\) は \(C\) の左右の辺の数以下である
-						      \item \(|\alert{X'}|\) と \(|\info{X}|\) の差分は \(G[(U \sqcup V) \setminus \info{X}]\) の辺の数以下である
-						      \item \(G[(U \sqcup V) \setminus \info{X}]\) の辺に対応する \(G'\) の辺は全て \(C\) に含まれる
+						      \item \out{\(C\) は点カバーであるから \(t \notin S\)}
+						      \item \out{\(S\) の定義から \((S, V(G')\setminus S) \subseteq E_c\)}
 					      \end{itemize}
 				\end{itemize}
 			\end{column}
 		\end{columns}
 	}
+
+	\only<3>{
+		\begin{columns}
+			\begin{column}{0.4\textwidth}
+				\begin{figure}
+					\centering
+					\includegraphics[width=1.0\textwidth]{figures/konig-theorem/cover-to-cut/vanished-induced-edges.drawio.png}
+				\end{figure}
+			\end{column}
+			\begin{column}{0.6\textwidth}
+				\begin{itemize}
+					\item \out{\(E_C\) を \(s\) または \(t\) を端点に持ち，もう片方の\\端点が \(C\) に属する辺の集合と定める}
+					\item \info{\(E_C\)} の辺を \(G'\) から削除したとき，\\\(s\) から到達可能な頂点の集合を \(S\) と定める
+					      \begin{itemize}
+						      \item \(C\) は点カバーであるから \(t \notin S\)
+						      \item \out{\(S\) の定義から \((S, V(G')\setminus S) \subseteq E_C\)}
+					      \end{itemize}
+				\end{itemize}
+			\end{column}
+		\end{columns}
+
+		\note{
+			背理法により示す． \(t \in S\) を仮定すると，\(s \leftarrow u \leftarrow v \leftarrow t\) の \(s\mathchar`-t\) パスが存在する．
+			\(E_C\) の定義により，\(u, v \notin C\) である．辺 \(u, v\) は \(C\) によってカバーされていないため，矛盾である．
+		}
+	}
+
+	\only<4>{
+		\begin{columns}
+			\begin{column}{0.4\textwidth}
+				\begin{figure}
+					\centering
+					\includegraphics[width=1.0\textwidth]{figures/konig-theorem/cover-to-cut/constructed-cut.drawio.png}
+				\end{figure}
+			\end{column}
+			\begin{column}{0.6\textwidth}
+				\begin{itemize}
+					\item \out{\(E_C\) を \(s\) または \(t\) を端点に持ち，もう片方の\\端点が \(C\) に属する辺の集合と定める}
+					\item \info{\(E_C\)} の辺を \(G'\) から削除したとき，\\\(s\) から到達可能な頂点の集合を \(S\) と定める
+					      \begin{itemize}
+						      \item \out{\(C\) は点カバーであるから \(t \notin S\)}
+						      \item \(S\) の定義から \(\alert{(S, V(G')\setminus S)} \subseteq \info{E_C}\)
+					      \end{itemize}
+				\end{itemize}
+			\end{column}
+		\end{columns}
+
+		\note{
+			背理法で示す．\((s, u) \in \alert{(S, V \setminus S)}\) かつ \((s, u) \notin \info{E_C}\) を満たす \(u\) の存在を仮定する．
+			このとき，\((s, u) \notin \info{E_C}\) より \(s\) から \(u\) に到達可能なので \(u \in S\) であるが，\((s, u) \in \alert{(S, V \setminus S)}\) に矛盾する．\((v, t)\) に関しても同様に示せる．
+		}
+	}
+
+	\only<5>{
+		\begin{columns}
+			\begin{column}{0.4\textwidth}
+				\begin{figure}
+					\centering
+					\includegraphics[width=1.0\textwidth]{figures/konig-theorem/cover-to-cut/constructed-cut.drawio.png}
+				\end{figure}
+			\end{column}
+			\begin{column}{0.6\textwidth}
+				\begin{itemize}
+					\item \info{\(E_C\)} を \(s\) または \(t\) を端点に持ち，もう片方の\\端点が \(C\) に属する辺の集合と定める
+					\item \info{\(E_C\)} の辺を \(G'\) から削除したとき，\\\(s\) から到達可能な頂点の集合を \(S\) と定める
+					      \begin{itemize}
+						      \item \(C\) は点カバーであるから \(t \notin S\)
+						      \item \(S\) の定義から \(\alert{(S, V(G')\setminus S)} \subseteq \info{E_C}\)
+					      \end{itemize}
+					\item[\(\Rightarrow\)] \(s\mathchar`-t\) カット \((S, V(G') \setminus S)\) の容量は \(|\info{E_C}| = |C|\) 以下である \qed
+				\end{itemize}
+			\end{column}
+		\end{columns}
+	}
 \end{frame}
 
-\begin{frame}{最小カットと最小点カバーの関係}
-	\begin{block}{示したこと}
-		\(G\) の任意の点カバー \(X\) に対して，\(G'\) のカット \((S, V(G') \setminus S)\) が存在して，その容量が \(|X|\) 以下である．
-	\end{block}
-	\begin{block}{示したこと}
-		\(G'\) の任意のカット \((S, V(G') \setminus S)\) に対して，\(G\) の点カバー \(X\) が存在して，そのサイズがカットの容量以下である．
-	\end{block}
-	\centering{\alert{\(G\) の最小点カバーの点数 = \(G'\) の最小カットの容量}}
+\begin{frame}{最小カットと最小点カバーの関係：最小点カバー \(\le\) 最小カット}
+	\begin{remark}
+		\(G'\) の任意の \(s\mathchar`-t\) カット \((S, V(G') \setminus S)\) に対して，\(G\) の点カバー \(C\) が存在して，\\
+		そのサイズが \(|(S, V(G') \setminus S)|\) 以下である．
+	\end{remark}
+
+	\only<1>{
+		\textbf{Proof.}
+		\(G'\) の任意の \(s\mathchar`-t\) カット \((S, V(G') \setminus S)\) を考える．
+		\begin{figure}
+			\centering
+			\includegraphics[width=0.4\textwidth]{figures/konig-theorem/cut-to-cover/arbitrary-cut.drawio.png}
+		\end{figure}
+	}
+
+	\only<2>{
+		\begin{columns}
+			\begin{column}{0.4\textwidth}
+				\begin{figure}
+					\centering
+					\includegraphics[width=1.0\textwidth]{figures/konig-theorem/cut-to-cover/selected-vertices.drawio.png}
+				\end{figure}
+			\end{column}
+			\begin{column}{0.6\textwidth}
+				\begin{itemize}
+					\item \((S, V(G') \setminus S)\) において，\(s\) または \(t\) を端点に\\持つ辺のもう一方の端点の集合を \info{\(C_1\)} とする
+					\item \out{\(G[V(G) \setminus C_1]\) において出次数 1 以上の\\左側の頂点の集合を \(C_2\) とする}
+				\end{itemize}
+			\end{column}
+		\end{columns}
+	}
+
+	\only<3>{
+		\begin{columns}
+			\begin{column}{0.4\textwidth}
+				\begin{figure}
+					\centering
+					\includegraphics[width=0.53\textwidth]{figures/konig-theorem/cut-to-cover/induced-graph.drawio.png}
+				\end{figure}
+			\end{column}
+			\begin{column}{0.6\textwidth}
+				\begin{itemize}
+					\item \out{\((S, V(G') \setminus S)\) において，\(s\) または \(t\) を端点に\\持つ辺のもう一方の端点の集合を \(C_1\) とする}
+					\item \(G[V(G) \setminus \info{C_1}]\) において出次数 1 以上の\\\dotuline{左側の}頂点の集合を \alert{\(C_2\)} とする
+				\end{itemize}
+			\end{column}
+		\end{columns}
+
+		\note{
+			そちらの方が少なければ，右側の頂点を選んでも今後の議論には影響を与えないはず．
+		}
+	}
+
+	\only<4>{
+		\begin{columns}
+			\begin{column}{0.4\textwidth}
+				\begin{figure}
+					\centering
+					\includegraphics[width=0.53\textwidth]{figures/konig-theorem/cut-to-cover/constructed-cover.drawio.png}
+				\end{figure}
+			\end{column}
+			\begin{column}{0.6\textwidth}
+				\begin{itemize}
+					\item \(C \coloneqq \info{C_1} \sqcup \alert{C_2}\) は \(G\) の点カバー
+					\item	\(|\info{C_1}| = \) \((S, V(G') \setminus S)\) の\dotuline{左右の}辺の本数
+					\item \(|\alert{C_2}| \le |E(G[V(G) \setminus \info{C_1}])|\) \\
+					      \quad\quad \( = (S, V(G') \setminus S)\) の\dotuline{中央の}辺の本数
+					\item[\(\Rightarrow\)] 点カバー \(C\) の容量は \(|(S, V(G') \setminus S)|\) 以下 \qed
+				\end{itemize}
+			\end{column}
+		\end{columns}
+
+		\note{
+			\begin{itemize}
+				\item \alert{\(C_2\)} は \(G[V(G) \setminus \info{C_1}]\) の点カバーであり，
+				      また，\info{\(C_2\)} は \(G[V(G) \setminus \info{C_2}]\) の点カバーであるから，\(C\) が \(G\) の点カバーであることは明らか
+				\item \info{\(C_1\)} の定義から明らか
+				\item (不等式) 鳩の巣原理的に分かる．(等式) \(|(S, V(G') \setminus S)|\) の中央の辺から誘導されるグラフと \(G[V(G) \setminus \info{C_1}]\) が一致することを考えれば明らか（孤立点は無視）
+			\end{itemize}
+		}
+	}
+\end{frame}
+
+\begin{frame}{最大マッチングと最小点カバー}
+	\vskip 1em
+
+	\konigTheorem*
+
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.9\textwidth]{figures/konig-theorem/summary.drawio.png}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}{まとめ}
+	LP 双対定理を利用して，下記の定理を証明した．
+	\begin{itemize}
+		\item[\checkmark] 最大フロー最小カット定理
+		      \begin{itemize}
+			      \item[\checkmark] 有向グラフの接続行列の完全単模性
+			      \item[\checkmark] 線形計画法の基本定理
+			      \item[\checkmark] Hoffman-Kruskal の定理
+		      \end{itemize}
+		\item[\checkmark] Konig の定理
+	\end{itemize}
 \end{frame}
 
 \begin{frame}[allowframebreaks]{References}
-	\printbibliography{}
+	\printbibliography[heading=none]{}
 \end{frame}
 
 \begin{frame}{Special Thanks}
 	\begin{itemize}
 		\item ある行列が完全単模行列であることの証明: \url{http://dopal.cs.uec.ac.jp/okamotoy/lect/2014/fdopt/handout07.pdf}
 		\item 線形計画法の基本定理の証明: \url{https://ja.wikipedia.org/w/index.php?title=線形計画法の基本定理}
+		\item Konig の定理の証明: \url{https://null-mn.hatenablog.com/entry/2022/10/31/223403}
 	\end{itemize}
 \end{frame}
 
 \begin{frame}[standout]
-	Any Questions?
+	Appendix
 \end{frame}
 
 \appendix
@@ -723,47 +956,5 @@
 		\]
 	\end{theorem}
 \end{frame}
-
-\begin{frame}{Theorem \ref{thm:fundamental-theorem-of-linear-programming} のイメージの補強のために}
-	\begin{theorem*}[線形計画法の基本定理~\cite{bertsekas1995nonlinear}]
-		\(P\) を \(\mathbb{R}^n\) 上の凸多面体とし，1 つ以上の頂点を持つと仮定する．
-		このとき，ある線形関数が \(P\) 上で\alert{最小値}を取るならば，その値は \(P\) の\alert{頂点}のうちの 1 つで達成される．
-	\end{theorem*}
-
-	定理の条件に合わないために，結論が成り立たない例を示す．
-
-\end{frame}
-
-\begin{frame}{Tools}
-	\begin{theorem}[LP-双対定理]
-		主問題が有界な最適解をもつための必要十分条件は双対問題が有界な最適解をもつことである．
-		さらに，\(\boldsymbol{x}^*\) と \(\boldsymbol{y}^*\) がそれぞれ主問題と双対問題の最適解ならば，以下の等式が成立する．
-
-		\[
-			\boldsymbol{c}^{\top}\boldsymbol{x}^* = \boldsymbol{b}^{\top}\boldsymbol{y}^*
-		\]
-
-	\end{theorem}
-
-	\begin{theorem}[弱双対定理]
-		\(\boldsymbol{x}\) と \(\boldsymbol{y}\) がそれぞれ主問題と双対問題の実行可能解ならば，以下の不等式が成立する．
-		\[
-			\boldsymbol{c}^{\top}\boldsymbol{x} \leq \boldsymbol{b}^{\top}\boldsymbol{y}
-		\]
-	\end{theorem}
-
-\end{frame}
-
-\begin{frame}{Tools 2}
-	\begin{theorem}[相補条件]
-		\(\boldsymbol{x}\) と \(\boldsymbol{y}\) をそれぞれ主問題と双対問題の実行可能解とする．
-		このとき，\(\boldsymbol{x}\) と \(\boldsymbol{y}\) がそれぞれ最適解であるための必要十分条件は，以下の条件が成立することである．
-
-		\textbf{主相補条件: } 各 \(1 \leq j \leq n\) に対して，\(x_j = 0\) あるいは \(\sum_{i=1}^{m} a_{ij} y_i = c_j\) である．
-
-		\textbf{双対相補条件: } 各 \(1 \leq i \leq m\) に対して，\(y_i = 0\) あるいは \(\sum_{j=1}^{n} a_{ij} x_j = b_i\) である．
-	\end{theorem}
-\end{frame}
-
 
 \end{document}
