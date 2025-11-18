@@ -33,6 +33,9 @@
 \DeclareMathOperator{\sgn}{sgn}
 
 % Beamer settings
+\usepackage{caption}
+\captionsetup[figure]{labelformat=empty}
+
 % \setbeamertemplate{theorems}[numbered]
 \addtobeamertemplate{theorem begin}{\normalfont}{}
 \newtheorem*{theorem*}{Theorem (restated)}
@@ -494,7 +497,7 @@
 		\vskip 1em
 
 		\begin{restatable}[線形計画法の基本定理~\cite{bertsekas1995nonlinear}]{theorem}{linearProgrammingFundamentalTheorem}
-			\(P\) を \(\mathbb{R}^n\) 上の凸多面体とし，1 つ以上の頂点を持つと仮定する．
+			\(P\) を \(\mathbb{R}^n\) 上の多面体とし，1 つ以上の頂点を持つと仮定する．
 			このとき，ある線形関数が \(P\) 上で\alert{最小値}を取るならば，その値は \(P\) の\alert{頂点}のうちの 1 つで達成される．
 		\end{restatable}
 
@@ -567,28 +570,6 @@
 		\left( \sum_{i=1}^{k} \lambda_i f(\boldsymbol{v}_i) \right) - f(\boldsymbol{x}^*) \underbrace{=}_{\mathclap{\raisebox{-1.5em}{\(\sum_{i=1}^{k} \lambda_i = 1\)}}}
 		\sum_{i=1}^{k} \lambda_i \left( f(\boldsymbol{v}_i) - f(\boldsymbol{x}^*) \right)
 	\]
-
-	\note{
-		\(\boldsymbol{x}^*\) は \(P\) の頂点 \(\boldsymbol{v}_1, \boldsymbol{v}_2, \ldots, \boldsymbol{v}_k\) の凸結合として表される．という点について，
-		\begin{proof}[凸多面体における頂点表現の存在]
-			凸多面体 $P$ の任意の点 $\boldsymbol{x}^* \in P$ について数学的帰納法で示す．
-
-			\textbf{Base case:} $\boldsymbol{x}^*$ が頂点の場合，自明に成立．
-
-			\textbf{Inductive step:} $\boldsymbol{x}^*$ が頂点でないとする．
-			頂点の定義により，$P$ の異なる2点 $\boldsymbol{y}, \boldsymbol{z} \in P$ と
-			$0 < \lambda < 1$ が存在して：
-			$$\boldsymbol{x}^* = \lambda \boldsymbol{y} + (1-\lambda) \boldsymbol{z}$$
-
-			$\boldsymbol{y}, \boldsymbol{z}$ のそれぞれについて：
-			- 頂点であれば終了
-			- 頂点でなければ，同様に分解
-
-			凸多面体の有限性により，この過程は必ず終了し，
-			頂点の凸結合が得られる．
-		\end{proof}
-
-	}
 	}
 
 	\only<3>{
@@ -602,7 +583,6 @@
 
 		ゆえに，\(P\) の頂点のうち，最小値を取る点が少なくとも 1 つ存在する．\qed
 	}
-
 \end{frame}
 
 \begin{frame}{Hoffman-Kruskal の定理~\cite{hoffman2010integral} の証明}
@@ -920,6 +900,16 @@
 	\end{definition}
 \end{frame}
 
+\begin{frame}{線形代数の復習 -- 多面体}
+	\begin{definition}[多面体, Polyhedron (or Polyhedral set)]
+		集合 \(P \subseteq \mathbb{R}^n\) が\alert{多面体}であるとは，有限個の線形不等式で表される集合であることをいう．
+	\end{definition}
+
+	\begin{definition}[有界多面体, Polytope]
+		集合 \(P \subseteq \mathbb{R}^n\) が\alert{有界多面体}であるとは，多面体であり，かつ有界であることをいう．
+	\end{definition}
+\end{frame}
+
 \begin{frame}{線形代数の復習 -- 行列式とその性質}
 	\begin{definition}[行列式]
 		\(n \times n\) 行列 \(A = (a_{ij})\) の\alert{行列式}とは，以下の式で定義される．
@@ -933,9 +923,7 @@
 		\item \(A\) の \(i\) 行と \(j\) 行を入れ替えると，\(\det(A)\) は符号が変わる
 		\item \(A\) の \(i\) 行に定数倍をすると，\(\det(A)\) も同じ定数倍される
 		\item \(A\) の \(i\) 行に他の行の定数倍を加えても，\(\det(A)\) は変わらない
-		\item \(A\) が単位行列ならば，\(\det(A) = 1\)
-		\item \(A\) が正則ならば，\(A^{-1} = \frac{\mathrm{adj}(A)}{\det(A)}\)
-		      ただし，\(\mathrm{adj}(A)\) は \(A\) の随伴行列である．
+		\item \(A\) を転置しても，\(\det(A)\) は変わらない
 	\end{itemize}
 \end{frame}
 
