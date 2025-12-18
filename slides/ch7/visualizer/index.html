@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Metric UFL Local Search Visualizer</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>メトリック容量無制限施設配置問題: 局所探索ビジュアライザ</h1>
+        <p>
+          開設候補施設と需要点（クライアント）を平面上に配置し，開設集合
+          <code>S</code> を局所探索法（追加・削除・交換の操作）で改善していく過程を視覚化します。
+        </p>
+      </header>
+
+      <section class="controls">
+        <div class="form-group">
+          <label for="facilityCount">施設数</label>
+          <input id="facilityCount" type="number" min="2" max="40" value="12" />
+        </div>
+        <div class="form-group">
+          <label for="clientCount">クライアント数</label>
+          <input id="clientCount" type="number" min="1" max="120" value="40" />
+        </div>
+        <div class="form-group">
+          <label for="openingCostRange">開設コスト幅</label>
+          <input id="openingCostRange" type="number" min="10" max="200" value="70" />
+        </div>
+        <div class="form-group">
+          <label for="seed">シード値</label>
+          <input id="seed" type="number" value="1" />
+        </div>
+        <div class="buttons">
+          <button id="generateBtn">インスタンス生成</button>
+          <button id="randomSeedBtn">シード再設定</button>
+          <button id="stepBtn">1ステップだけ探索</button>
+          <button id="runBtn">局所最適まで進める</button>
+          <button id="resetBtn">初期解に戻す</button>
+          <button id="optimalBtn">最適解を計算</button>
+          <button id="toggleViewBtn" disabled>最適解を表示</button>
+        </div>
+      </section>
+
+      <section class="metrics">
+        <div><span class="label">反復:</span> <span id="iteration">0</span></div>
+        <div><span class="label">総コスト:</span> <span id="totalCost">0</span></div>
+        <div><span class="label">開設コスト:</span> <span id="openCost">0</span></div>
+        <div><span class="label">割当コスト:</span> <span id="assignCost">0</span></div>
+        <div><span class="label">操作:</span> <span id="lastMove">-</span></div>
+      </section>
+
+      <section class="board-wrapper">
+        <canvas id="board" width="900" height="520" aria-label="局所探索の状態"></canvas>
+        <aside class="legend">
+          <h2>凡例とヒント</h2>
+          <ul>
+            <li><span class="legend facility-open"></span>現在開設している施設</li>
+            <li><span class="legend facility-closed"></span>未開設の施設</li>
+            <li><span class="legend client"></span>クライアント。割当先まで線を描画</li>
+            <li>追加: 未開設施設を開く</li>
+            <li>削除: 既開設施設を閉じる</li>
+            <li>交換: 1施設を閉じて別の施設を同時に開く</li>
+          </ul>
+        </aside>
+      </section>
+
+      <section class="log">
+        <h2>操作ログ</h2>
+        <ol id="logList"></ol>
+      </section>
+
+      <footer>
+        <p>
+          反復では許容操作の中から最良の改善を一つ選択します。改善が存在しないとき，探索は局所最適に停止します。
+        </p>
+      </footer>
+    </main>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

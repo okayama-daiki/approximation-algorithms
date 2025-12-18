@@ -1,0 +1,180 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Packages
+\usepackage{amsthm}        % For theorems
+\usepackage{amsmath}       % For math
+\usepackage{luatexja}      % For Japanese
+\usepackage{booktabs}      % For formal tables
+\usepackage{mathtools}
+\usepackage{amssymb}       % For checkmark
+\usepackage{ulem}          % For strikeout
+\usepackage[dvipsnames]{xcolor} % For colors (i.e. ForestGreen)
+\usepackage[noend]{algpseudocode}
+\usepackage[backend=biber,
+            style=authoryear,
+            sorting=none
+            ]{biblatex}    % For bibliography
+\usepackage{tikz}          % For figures
+\usepackage{multirow}      % For multiorow in tables
+\usepackage{xspace}            % For proper spacing after macros
+\usepackage{thmtools}
+\usepackage{thm-restate}
+\usetikzlibrary{arrows.meta,
+                chains,
+                positioning}
+
+\addbibresource{references.bib}
+
+% Settings for bibliography
+\renewcommand*{\mkbibparens}[1]{\mkbibbrackets{#1}}
+\renewcommand*{\nameyeardelim}{\addcomma\space}
+
+% Custom commands
+\DeclareMathOperator{\interior}{int}
+\DeclareMathOperator{\sgn}{sgn}
+
+% Macro
+\newcommand{\cost}{\text{cost}}
+\newcommand{\costassign}[1]{\text{cost}_{assign}{#1}}
+\newcommand{\costopen}[1]{\text{cost}_{open}{#1}}
+\newcommand{\opt}{(S^*, \sigma^*)}
+\newcommand*{\localopt}{(S, \sigma)}
+\newcommand{\ALG}{\text{\upshape ALG}\xspace}
+\newcommand{\OPT}{\text{\upshape OPT}\xspace}
+
+% Beamer settings
+\usepackage{caption}
+\captionsetup[figure]{labelformat=empty}
+
+% \setbeamertemplate{theorems}[numbered]
+\addtobeamertemplate{theorem begin}{\normalfont}{}
+\newtheorem*{theorem*}{Theorem (restated)}
+\newtheorem*{lemma*}{Lemma (restated)}
+\newtheorem*{sproof}{Sketch of the proof.}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+% \setbeameroption{hide notes}
+% \setbeameroption{show only notes}
+\setbeameroption{show notes on second screen=right}
+
+% includeonlyframes{current,current2,current3,current4}
+
+\newcommand{\info}[1]{\textcolor{ForestGreen}{#1}}
+\newcommand{\out}[1]{\textcolor{lightgray}{#1}}
+
+% Theme
+\usetheme{metropolis}
+\usecolortheme{default}
+\metroset{block=fill}
+
+% Fonts
+\setbeamerfont{title}{size=\large,series=\bfseries}
+\setbeamerfont{theorem}{shape=\upshape}
+\usefonttheme{professionalfonts}
+\usefonttheme{structurebold}
+\setbeamerfont{title}{size=\LARGE}
+\setbeamerfont{date}{size=\small}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+\setmainfont{Latin Modern Roman}
+\usepackage{luatexja-fontspec}
+\usepackage[T1]{fontenc}
+\usepackage{mlmodern}
+\usepackage{luatexja-otf}
+\renewcommand{\kanjifamilydefault}{\gtdefault} % 既定欧文フォントがサンセリフなので，既定和文フォントもゴシック体に設定する
+\renewcommand{\familydefault}{\sfdefault}
+
+% Metadata
+\title{7.8 施設配置問題に対する局所探索アルゴリズム}
+\subtitle{近似アルゴリズム ―離散最適化問題への効果的アプローチ―}
+\author{岡山 大輝}
+\institute{兵庫県立大学大学院 情報科学研究科\textit{(ad25r010@guh.u-hyogo.ac.jp)}}
+\date{January 5 \& January 12, 2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{施設配置問題}
+
+  \note{
+    \begin{itemize}
+      \item この問題に対する解を \((S, \sigma)\) で表記する。
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{施設配置問題に対する局所探索アルゴリズム}
+
+  \note{
+    \begin{itemize}
+      \item
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{施設配置問題に対する局所最適解の性質}
+
+  \begin{lemma}
+    局所最適解 \(\localopt\) に対して、
+    \(C \le F^* + C^* = \OPT\)
+    が成立する。
+  \end{lemma}
+
+  \begin{lemma}
+    局所最適解 \(\localopt\) に対して、
+    \(F \le F^* + 2C^*\)
+    が成立する。
+  \end{lemma}
+
+  \begin{theorem}[\cite{arya2004local}]
+    施設配置問題の局所最適解 \(\localopt\) の総コストは、高々 \(3\OPT\) である。
+  \end{theorem}
+
+  \textbf{Proof. } 局所最適解の総コストは \(C + F\) であり、上の 2 つの補題より、
+  \[C + F \le (F^* + C^*) + (F^* + 2C^*) = 2F^* + 3C^* \le 3F^* + 3C^* = 3\OPT.\]
+
+  \note{
+    \begin{itemize}
+      \item \textbf{任意の}局所最適解は、最適解に結構近い
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{施設配置問題に対する局所最適解のタイトな例}
+
+  局所最適解の総コストが最適値の少なくとも \(3 - o(1)\) 倍になる例~(\cite{arya2004local})．
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/lower-bound.drawio.png}
+  \end{figure}
+
+  \note{
+    \begin{itemize}
+      \item まずインスタンスの説明（開設コスト \(0\) の施設が \(k+1\) 個，開設コスト \(2k\) の施設が \(1\) 個，顧客が \(k+1\) 人、すべての距離が \(1\) であること）
+      \item 施設 \(i_0\) を開設し、各顧客をそれぞれの施設に割り当てる解のコストが \(2k + (k+1) = 3k + 1\) であること
+      \item 追加操作、交換操作によって解の値が改善されないので、これは局所最適解であること
+      \item 最適解は、施設 \(i_0\) 以外の施設をすべて開設し、各顧客をそれぞれの施設に割り当てる解であり、そのコストは \(k + 1\) であること
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{開設コストの上界}
+  \begin{lemma}
+    局所最適解 \(\localopt\) に対して、
+    \[F \le F^* + 2C^*\]
+    が成立する。
+  \end{lemma}
+
+  \textbf{Sketch of the proof. }
+
+
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+  \printbibliography[heading=none]{}
+\end{frame}
+
+\end{document}
