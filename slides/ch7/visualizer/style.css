@@ -130,7 +130,7 @@ canvas {
   display: inline-block;
   width: 14px;
   height: 14px;
-  border-radius: 50%;
+  border-radius: 3px;
   margin-right: 0.3rem;
 }
 

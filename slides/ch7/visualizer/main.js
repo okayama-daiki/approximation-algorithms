@@ -1,22 +1,22 @@
-const canvas = document.querySelector('#board');
-const ctx = canvas.getContext('2d');
-const facilityCountInput = document.querySelector('#facilityCount');
-const clientCountInput = document.querySelector('#clientCount');
-const openingCostInput = document.querySelector('#openingCostRange');
-const seedInput = document.querySelector('#seed');
-const generateBtn = document.querySelector('#generateBtn');
-const randomSeedBtn = document.querySelector('#randomSeedBtn');
-const stepBtn = document.querySelector('#stepBtn');
-const runBtn = document.querySelector('#runBtn');
-const resetBtn = document.querySelector('#resetBtn');
-const optimalBtn = document.querySelector('#optimalBtn');
-const toggleViewBtn = document.querySelector('#toggleViewBtn');
-const iterationEl = document.querySelector('#iteration');
-const totalCostEl = document.querySelector('#totalCost');
-const openCostEl = document.querySelector('#openCost');
-const assignCostEl = document.querySelector('#assignCost');
-const lastMoveEl = document.querySelector('#lastMove');
-const logList = document.querySelector('#logList');
+const canvas = document.querySelector("#board");
+const ctx = canvas.getContext("2d");
+const facilityCountInput = document.querySelector("#facilityCount");
+const clientCountInput = document.querySelector("#clientCount");
+const openingCostInput = document.querySelector("#openingCostRange");
+const seedInput = document.querySelector("#seed");
+const generateBtn = document.querySelector("#generateBtn");
+const randomSeedBtn = document.querySelector("#randomSeedBtn");
+const stepBtn = document.querySelector("#stepBtn");
+const runBtn = document.querySelector("#runBtn");
+const resetBtn = document.querySelector("#resetBtn");
+const optimalBtn = document.querySelector("#optimalBtn");
+const toggleViewBtn = document.querySelector("#toggleViewBtn");
+const iterationEl = document.querySelector("#iteration");
+const totalCostEl = document.querySelector("#totalCost");
+const openCostEl = document.querySelector("#openCost");
+const assignCostEl = document.querySelector("#assignCost");
+const lastMoveEl = document.querySelector("#lastMove");
+const logList = document.querySelector("#logList");
 
 const MAX_LOG_ITEMS = 20;
 const TOLERANCE = 1e-6;
@@ -30,37 +30,37 @@ const state = {
   assignments: [],
   iteration: 0,
   costs: { totalCost: 0, openCost: 0, assignCost: 0 },
-  lastMove: '-',
+  lastMove: "-",
   logEntries: [],
   running: false,
   optimalSolution: null,
-  viewMode: 'current',
+  viewMode: "current",
 };
 
-generateBtn.addEventListener('click', () => {
+generateBtn.addEventListener("click", () => {
   generateInstance();
 });
 
-randomSeedBtn.addEventListener('click', () => {
+randomSeedBtn.addEventListener("click", () => {
   const randomSeed = Math.floor(Math.random() * 100000);
   seedInput.value = randomSeed;
   generateInstance();
 });
 
-resetBtn.addEventListener('click', () => {
+resetBtn.addEventListener("click", () => {
   if (!state.facilities.length) return;
   state.openSet = new Set(state.initialOpenSet);
   state.iteration = 0;
   const evaluation = evaluateCurrentSolution();
-  updateStateAfterEvaluation(evaluation, '初期解にリセット');
-  appendLog('初期解にリセットしました。');
+  updateStateAfterEvaluation(evaluation, "初期解にリセット");
+  appendLog("初期解にリセットしました。");
 });
 
-stepBtn.addEventListener('click', () => {
+stepBtn.addEventListener("click", () => {
   performSingleStep();
 });
 
-runBtn.addEventListener('click', async () => {
+runBtn.addEventListener("click", async () => {
   if (state.running) {
     state.running = false;
     return;
@@ -68,11 +68,11 @@ runBtn.addEventListener('click', async () => {
   await runUntilLocalOptimum();
 });
 
-optimalBtn.addEventListener('click', () => {
+optimalBtn.addEventListener("click", () => {
   computeOptimalSolution();
 });
 
-toggleViewBtn.addEventListener('click', () => {
+toggleViewBtn.addEventListener("click", () => {
   toggleViewMode();
 });
 
@@ -90,9 +90,17 @@ function randomBetween(rng, min, max) {
 }
 
 function readOptions() {
-  const facilityCount = clamp(parseInt(facilityCountInput.value, 10) || 10, 2, 50);
+  const facilityCount = clamp(
+    parseInt(facilityCountInput.value, 10) || 10,
+    2,
+    50
+  );
   const clientCount = clamp(parseInt(clientCountInput.value, 10) || 20, 1, 200);
-  const openingCostRange = clamp(parseInt(openingCostInput.value, 10) || 50, 10, 500);
+  const openingCostRange = clamp(
+    parseInt(openingCostInput.value, 10) || 50,
+    10,
+    500
+  );
   const seed = parseInt(seedInput.value, 10) || 1;
   facilityCountInput.value = facilityCount;
   clientCountInput.value = clientCount;
@@ -107,7 +115,7 @@ function clamp(value, min, max) {
 
 function generateInstance() {
   state.running = false;
-  runBtn.textContent = '局所最適まで進める';
+  runBtn.textContent = "局所最適まで進める";
   const { facilityCount, clientCount, openingCostRange, seed } = readOptions();
   const rng = mulberry32(seed >>> 0);
   const padding = 30;
@@ -133,10 +141,10 @@ function generateInstance() {
   state.initialOpenSet = new Set(openSet);
   state.iteration = 0;
   state.logEntries = [];
-  logList.innerHTML = '';
+  logList.innerHTML = "";
   clearOptimalSolution();
   const evaluation = evaluateCurrentSolution();
-  updateStateAfterEvaluation(evaluation, '新しいインスタンスを生成');
+  updateStateAfterEvaluation(evaluation, "新しいインスタンスを生成");
   appendLog(`インスタンス生成 (seed=${seed})`);
 }
 
@@ -168,7 +176,7 @@ function evaluateCurrentSolution(customSet) {
 
 function assignClients(openSet) {
   if (openSet.size === 0) {
-    throw new Error('少なくとも1つの施設を開設する必要があります');
+    throw new Error("少なくとも1つの施設を開設する必要があります");
   }
   const openFacilities = [...openSet].map((id) => state.facilities[id]);
   const assignments = state.clients.map((client) => {
@@ -179,7 +187,11 @@ function assignClients(openSet) {
         best = { facilityId: facility.id, distance };
       }
     }
-    return { clientId: client.id, facilityId: best.facilityId, distance: best.distance };
+    return {
+      clientId: client.id,
+      facilityId: best.facilityId,
+      distance: best.distance,
+    };
   });
   const assignCost = assignments.reduce((acc, item) => acc + item.distance, 0);
   return { assignments, assignCost };
@@ -199,7 +211,7 @@ function updateStateAfterEvaluation(evaluation, moveText) {
 }
 
 function getDisplaySolution() {
-  if (state.viewMode === 'optimal' && state.optimalSolution) {
+  if (state.viewMode === "optimal" && state.optimalSolution) {
     return { solution: state.optimalSolution, showingOptimal: true };
   }
   return { solution: state.costs, showingOptimal: false };
@@ -217,16 +229,16 @@ function updateMetrics(solution, moveText, showingOptimal) {
   openCostEl.textContent = solution.openCost.toFixed(1);
   assignCostEl.textContent = solution.assignCost.toFixed(1);
   if (showingOptimal) {
-    lastMoveEl.textContent = '最適解を表示中';
+    lastMoveEl.textContent = "最適解を表示中";
   } else {
-    lastMoveEl.textContent = moveText || state.lastMove || '-';
+    lastMoveEl.textContent = moveText || state.lastMove || "-";
   }
 }
 
 function drawBoard(openSetForDisplay, assignmentsForDisplay) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.lineWidth = 1;
-  ctx.strokeStyle = 'rgba(15, 23, 42, 0.25)';
+  ctx.strokeStyle = "rgba(15, 23, 42, 0.25)";
 
   const facilityMap = new Map(state.facilities.map((f) => [f.id, f]));
 
@@ -242,25 +254,25 @@ function drawBoard(openSetForDisplay, assignmentsForDisplay) {
 
   // draw clients
   for (const client of state.clients) {
-    ctx.fillStyle = '#059669';
+    ctx.fillStyle = "#059669";
     ctx.beginPath();
     ctx.arc(client.x, client.y, 4, 0, Math.PI * 2);
     ctx.fill();
   }
 
-  // draw facilities
+  // draw facilities as squares (open: larger + accent color)
   for (const facility of state.facilities) {
     const open = openSetForDisplay.has(facility.id);
-    ctx.fillStyle = open ? '#f97316' : '#94a3b8';
-    ctx.strokeStyle = '#fff';
+    ctx.fillStyle = open ? "#f97316" : "#94a3b8";
+    ctx.strokeStyle = "#fff";
     ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(facility.x, facility.y, open ? 8 : 6, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
+    const half = open ? 8 : 6;
+    const size = half * 2;
+    ctx.fillRect(facility.x - half, facility.y - half, size, size);
+    ctx.strokeRect(facility.x - half, facility.y - half, size, size);
 
-    ctx.fillStyle = '#111827';
-    ctx.font = '12px sans-serif';
+    ctx.fillStyle = "#111827";
+    ctx.font = "12px sans-serif";
     ctx.fillText(`F${facility.id}`, facility.x + 10, facility.y - 6);
     ctx.fillText(`f=${facility.openingCost}`, facility.x + 10, facility.y + 8);
   }
@@ -272,9 +284,9 @@ function appendLog(text) {
   if (state.logEntries.length > MAX_LOG_ITEMS) {
     state.logEntries.pop();
   }
-  logList.innerHTML = '';
+  logList.innerHTML = "";
   for (const entry of state.logEntries) {
-    const li = document.createElement('li');
+    const li = document.createElement("li");
     li.textContent = entry;
     logList.appendChild(li);
   }
@@ -282,14 +294,14 @@ function appendLog(text) {
 
 function clearOptimalSolution() {
   state.optimalSolution = null;
-  state.viewMode = 'current';
+  state.viewMode = "current";
   updateViewToggleButton();
 }
 
 function updateViewToggleButton() {
-  const showingOptimal = state.viewMode === 'optimal' && state.optimalSolution;
+  const showingOptimal = state.viewMode === "optimal" && state.optimalSolution;
   toggleViewBtn.disabled = !state.optimalSolution;
-  toggleViewBtn.textContent = showingOptimal ? '現在解を表示' : '最適解を表示';
+  toggleViewBtn.textContent = showingOptimal ? "現在解を表示" : "最適解を表示";
 }
 
 function computeOptimalSolution() {
@@ -301,7 +313,7 @@ function computeOptimalSolution() {
     );
     return;
   }
-  appendLog('最適解を計算しています...');
+  appendLog("最適解を計算しています...");
   const facilityIds = state.facilities.map((f) => f.id);
   const totalSubsets = 1 << facilityCount;
   let bestEvaluation = null;
@@ -313,38 +325,43 @@ function computeOptimalSolution() {
       }
     }
     const evaluation = evaluateCurrentSolution(openSet);
-    if (!bestEvaluation || evaluation.totalCost < bestEvaluation.totalCost - TOLERANCE) {
+    if (
+      !bestEvaluation ||
+      evaluation.totalCost < bestEvaluation.totalCost - TOLERANCE
+    ) {
       bestEvaluation = evaluation;
     }
   }
   if (bestEvaluation) {
     state.optimalSolution = bestEvaluation;
-    state.viewMode = 'optimal';
+    state.viewMode = "optimal";
     updateViewToggleButton();
-    refreshDisplay('最適解');
+    refreshDisplay("最適解");
     appendLog(`最適解を計算完了 (cost=${bestEvaluation.totalCost.toFixed(2)})`);
   }
 }
 
 function toggleViewMode() {
   if (!state.optimalSolution) return;
-  state.viewMode = state.viewMode === 'optimal' ? 'current' : 'optimal';
+  state.viewMode = state.viewMode === "optimal" ? "current" : "optimal";
   updateViewToggleButton();
   refreshDisplay();
-  appendLog(state.viewMode === 'optimal' ? '最適解を表示中' : '局所探索解を表示中');
+  appendLog(
+    state.viewMode === "optimal" ? "最適解を表示中" : "局所探索解を表示中"
+  );
 }
 
 function describeMove(move) {
-  if (!move) return '改善なし';
+  if (!move) return "改善なし";
   switch (move.type) {
-    case 'add':
+    case "add":
       return `追加: F${move.addId}`;
-    case 'remove':
+    case "remove":
       return `削除: F${move.removeId}`;
-    case 'swap':
+    case "swap":
       return `交換: F${move.removeId} ⇄ F${move.addId}`;
     default:
-      return '操作';
+      return "操作";
   }
 }
 
@@ -352,8 +369,8 @@ function performSingleStep() {
   if (!state.facilities.length) return;
   const move = findBestMove();
   if (!move) {
-    appendLog('局所最適に到達しました。');
-    state.lastMove = '局所最適';
+    appendLog("局所最適に到達しました。");
+    state.lastMove = "局所最適";
     refreshDisplay(state.lastMove);
     return;
   }
@@ -376,7 +393,7 @@ function findBestMove() {
     const evaluation = evaluateCurrentSolution(newSet);
     const delta = evaluation.totalCost - currentCost;
     if (delta < -TOLERANCE && (!best || delta < best.delta)) {
-      best = { type: 'add', addId, delta, evaluation, newSet };
+      best = { type: "add", addId, delta, evaluation, newSet };
     }
   }
 
@@ -388,7 +405,7 @@ function findBestMove() {
       const evaluation = evaluateCurrentSolution(newSet);
       const delta = evaluation.totalCost - currentCost;
       if (delta < -TOLERANCE && (!best || delta < best.delta)) {
-        best = { type: 'remove', removeId, delta, evaluation, newSet };
+        best = { type: "remove", removeId, delta, evaluation, newSet };
       }
     }
   }
@@ -402,7 +419,7 @@ function findBestMove() {
       const evaluation = evaluateCurrentSolution(newSet);
       const delta = evaluation.totalCost - currentCost;
       if (delta < -TOLERANCE && (!best || delta < best.delta)) {
-        best = { type: 'swap', removeId, addId, delta, evaluation, newSet };
+        best = { type: "swap", removeId, addId, delta, evaluation, newSet };
       }
     }
   }
@@ -421,14 +438,14 @@ function applyMove(move) {
 async function runUntilLocalOptimum() {
   if (!state.facilities.length) return;
   state.running = true;
-  runBtn.textContent = '停止';
+  runBtn.textContent = "停止";
   let guard = 0;
   const limit = 800;
   while (state.running && guard < limit) {
     const move = findBestMove();
     if (!move) {
-      appendLog('局所最適に到達しました。');
-      state.lastMove = '局所最適';
+      appendLog("局所最適に到達しました。");
+      state.lastMove = "局所最適";
       refreshDisplay(state.lastMove);
       break;
     }
@@ -437,10 +454,10 @@ async function runUntilLocalOptimum() {
     await waitFrame();
   }
   if (guard >= limit) {
-    appendLog('反復上限に達したため停止しました。');
+    appendLog("反復上限に達したため停止しました。");
   }
   state.running = false;
-  runBtn.textContent = '局所最適まで進める';
+  runBtn.textContent = "局所最適まで進める";
 }
 
 function waitFrame() {

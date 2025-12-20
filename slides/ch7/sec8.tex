@@ -99,6 +99,8 @@
 
 \begin{frame}{施設配置問題}
 
+  本発表では容量制限のないメトリック施設配置問題を考える。
+
   \note{
     \begin{itemize}
       \item この問題に対する解を \((S, \sigma)\) で表記する。
@@ -117,13 +119,13 @@
 
 \begin{frame}{施設配置問題に対する局所最適解の性質}
 
-  \begin{lemma}
+  \begin{lemma}[後で示す]
     局所最適解 \(\localopt\) に対して、
     \(C \le F^* + C^* = \OPT\)
     が成立する。
   \end{lemma}
 
-  \begin{lemma}
+  \begin{lemma}[後で示す]
     局所最適解 \(\localopt\) に対して、
     \(F \le F^* + 2C^*\)
     が成立する。
@@ -134,11 +136,13 @@
   \end{theorem}
 
   \textbf{Proof. } 局所最適解の総コストは \(C + F\) であり、上の 2 つの補題より、
-  \[C + F \le (F^* + C^*) + (F^* + 2C^*) = 2F^* + 3C^* \le 3F^* + 3C^* = 3\OPT.\]
+  \[C + F \le (F^* + C^*) + (F^* + 2C^*) = 2F^* + 3C^* < 3F^* + 3C^* = 3\OPT.\]
 
   \note{
     \begin{itemize}
-      \item \textbf{任意の}局所最適解は、最適解に結構近い
+      \item いろいろ示唆に富んだ補題
+      \item 任意の最適解に対してこの補題が成り立つという点
+      \item \(F^* + C^*\) が一致すればよいので、極端な話、\(F^*\) が非常に大きく \(C^*\) が非常に小さい場合ような最適解に対しても成り立つ
     \end{itemize}
   }
 \end{frame}
@@ -164,13 +168,309 @@
 \begin{frame}{開設コストの上界}
   \begin{lemma}
     局所最適解 \(\localopt\) に対して、
-    \[F \le F^* + 2C^*\]
+    \(F \le F^* + 2C^*\)
     が成立する。
   \end{lemma}
 
   \textbf{Sketch of the proof. }
+  局所最適解に対する追加／削除／交換移動によって、コストが改善しないことから導かれる不等式を組み合わせて示す。
+  \begin{itemize}
+    \leftskip 2em
+    \item[（削除） ] \(0 \le -f_i + \sum_{j \in D \colon \sigma(j) = i} 2c_{\sigma^*(j)j}\)
+    \item[（追加） ] \(0 \le f_{i^*} + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) = i^*} (c_{\sigma^*(j)j} - c_{\sigma(j)j})\)
+    \item[（交換） ] \(0 \le f_{i^{'}} - f_i + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \in R_i} (c_{i'j} - c_{\sigma(j)j}) + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \notin R_i} 2c_{\sigma^*(j)j}\)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{前準備：再割当てにおけるコストの増加分の上界}
+  \begin{lemma}
+    施設 \(\sigma(j) = i\) と \(i' = \phi(\sigma^*(j))\) が異なるような任意の利用者 \(j\) を考える。
+    このとき、利用者 \(j\) を施設 \(i\) から施設 \(i'\) に再割当てしたときのコストの増加分 (\(c_{i'j} - c_{ij}\)) は、
+    高々 \(2c_{\sigma^*(j)j}\) である。
+  \end{lemma}
+
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/reassignment.drawio.png}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/reassignment-case2.drawio.png}
+      \end{figure}
+    \end{column}
+  \end{columns}
 
 
+  \note{
+    \begin{itemize}
+      \item これから削除移動や交換移動を考えるが、今割り当てられている施設が閉じてしまった場合に、他の開設している施設に割り当て直す必要がある
+      \item その施設の決め方としてあり得るものは、最適解において割り当てられていた施設から最も近い施設に割り当て直す方法である（もちろんそのような施設が存在すれば）
+      \item 直感的にはそこまで悪くなさそうで、実際に三角不等式によって上界を与えることができるというのがこの補題
+    \end{itemize}
+    ---
+    \begin{itemize}
+      \item なお \(i \in S^*\) のときでも成り立つよね？？
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{安全な施設と安全でない施設}
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/safe-facility.drawio.png}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{definition}[安全な施設]
+        施設 \(i \in S\) が\info{安全}であるとは、
+        最適解の全ての施設 \(i^* \in S^*\) について、
+        \[
+          \phi(i^*) \neq i
+        \]
+        が成立することである。
+      \end{definition}
+      逆に、ある施設 \(i^* \in S^*\) について、
+      \[
+        \phi(i^*) = i
+      \]
+      が成立する場合、施設 \(i\) を\alert{安全でない}とよぶ。
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+% \begin{frame}{安全な施設に対する削除操作}
+
+% \end{frame}
+
+\begin{frame}{安全でない施設 \(i\) に対する集合 \(R_i\) と施設 \(i'\)}
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/unsafe-facility-add.drawio.png}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{itemize}
+        \item 安全でない施設 \(\alert{i} \in S\) を固定する
+        \item 最適解の施設 \(i^* \in S^*\) であって、\(\phi(i^*) = \alert{i}\) を満たすものを \(R_i (\subseteq S^*)\) とする
+              \begin{itemize}
+                \item \(\alert{i}\) は安全でない \(\Leftrightarrow R_i \neq \emptyset\)
+              \end{itemize}
+        \item さらに、\(\alert{i}\) に最も近い \(R_i\) の施設を \(i^{'}\) とする
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \note{
+    \begin{itemize}
+      \item 図の場合 (\(i \notin S^*\)) は、\(R_i \subseteq S^* \setminus S\)
+      \item ちなみに、\(i' \in S^* \setminus S\) か、さもなければ、\(i' = i\)
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{安全な施設の削除移動}
+
+\end{frame}
+
+\begin{frame}{補足：安全でない施設 \(i \in S \bigcap S^*\) に対する集合 \(R_i\) と施設 \(i'\)}
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/unsafe-facility-add.drawio.png}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{itemize}
+        \item 安全でない施設 \(\alert{i} \in S \bigcap S^*\) を固定する
+        \item 最適解の施設 \(i^* \in S^*\) であって、\(\phi(i^*) = \alert{i}\) を満たすものを \(R_i (\subseteq S^*)\) とする
+              \begin{itemize}
+                \item この場合、\(i \in R_i\)？
+              \end{itemize}
+        \item このとき、\(i' = i\) になるの？
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{追加移動で開設される施設と割当ての変化}
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/unsafe-facility-add.drawio.png}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{itemize}
+        \item 施設 \(i^{*} \in {R_i \setminus \{i'\}}\) を開設する
+        \item \(\localopt\) において \(i\) に割り当てられていた顧客のうち、\(\opt\) において \(i^{*}\) に割り当てられていた顧客を \(i^{*}\) に再割当てする
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{追加移動に対するコストの増加分の不等式}
+  局所最適解 \(\localopt\) に対して追加操作を行なってもコストは改善しないので、
+
+  \[
+    \sum_{i \in S} f_i + \sum_{j \in D} c_{\sigma(j)j} \le \sum_{i \in S \cup \{i^*\}} f_i + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) = i^*} c_{\sigma^*(j)j} + \sum_{j \in D \colon \sigma(j) \neq i \text{ or } \sigma^*(j) \neq i^*} c_{\sigma(j)j}
+  \]
+
+  よって、
+  \[
+    0 \le f_{i^*} + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) = i^*} (c_{\sigma^*(j)j} - c_{\sigma(j)j})
+  \]
+
+\end{frame}
+
+\begin{frame}{交換移動で開設される施設と割当ての変化}
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/unsafe-facility-swap.drawio.png}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{itemize}
+        \item \(i\) を閉鎖し、施設 \(i^{'}\) を開設する
+        \item \(\sigma(j) = i\) である利用者 \(j\) について割当てを変更する：
+              \begin{itemize}
+                \item \(\sigma^*(j) \in R_i\) であれば、\(j\) を \(i^{'}\) に再割当てする
+                \item \(\sigma^*(j) \notin R_i\) であれば、\(j\) を \(\phi(\sigma^*(j))\) に再割当てする
+              \end{itemize}
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \note{
+    \begin{itemize}
+      \item 安全でない施設 \(i\) を \(S \bigcap S^*\) から選んだ場合、\(i' = i\) になる
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{交換移動に対するコストの増加分の不等式 (1/2)}
+  局所最適解 \(\localopt\) に対して交換操作を行なってもコストは改善しないので、
+
+  \begin{align*}
+    \sum_{i \in S} f_i + \sum_{j \in D} c_{\sigma(j)j} & \le \sum_{i \in S \cup \{i^{'}\} \setminus \{i\}} f_i + \sum_{j \in D \colon \sigma(j) \neq i} c_{\sigma(j)j} \\
+                                                       & + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \in R_i} c_{i'j}                                \\
+                                                       & + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \notin R_i} c_{\phi(\sigma^*(j))j}
+  \end{align*}
+
+  よって、
+  \begin{align*}
+    0 & \le  f_{i^{'}} - f_i + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \in R_i} (c_{i'j} - c_{\sigma(j)j}) \\
+      & + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \notin R_i} (c_{\phi(\sigma^*(j))j} - c_{\sigma(j)j})
+  \end{align*}
+
+\end{frame}
+
+\begin{frame}{交換移動に対するコストの増加分の不等式 (2/2)}
+  さらに三角不等式より、
+  \begin{align*}
+    0 & \le  f_{i^{'}} - f_i + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \in R_i} (c_{i'j} - c_{\sigma(j)j})   \\
+      & + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \notin R_i} (c_{\phi(\sigma^*(j))j} - c_{\sigma(j)j})      \\
+      & \le    f_{i^{'}} - f_i + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \in R_i} (c_{i'j} - c_{\sigma(j)j}) \\
+      & + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \notin R_i} \alert{2c_{\sigma^*(j)j}}                      \\
+  \end{align*}
+
+\end{frame}
+
+\begin{frame}[standout]
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.3\textwidth]{figures/danger.png}
+  \end{figure}
+
+  次のスライドで大変ショッキングな数式が表示されます。
+
+  心臓の弱い方はご注意ください。
+\end{frame}
+
+\begin{frame}{がんばろう (1/2)}
+  \(i^* \in R_i \setminus \{i^{'}\}\) に対する追加操作の不等式と交換操作の不等式を全て足し合わせると、
+  \begin{align*}
+    0 & \le \sum_{i^* \in R_i \setminus \{i'\}} \biggl( f_{i^*} + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) = i^*} (c_{\sigma^*(j)j} - c_{\sigma(j)j}) \biggr)                                                                                     \\
+      & + \biggl( f_{i'} - f_i + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \in R_i} (c_{i'j} - c_{\sigma(j)j}) + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \notin R_i} 2c_{\sigma^*(j)j} \biggr)                                 \\
+      & = - f_i + \sum_{i^* \in R_i} f_{i^*} + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \notin R_i} 2c_{\sigma^*(j)j}                                                                                                                             \\
+      & + \sum_{i^* \in R_i \setminus \{i'\}} \biggl(\sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) = i^*} (c_{\sigma^*(j)j} - c_{\sigma(j)j})\biggr) + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \in R_i} (c_{i'j} - c_{\sigma(j)j}) \\
+      & = - f_i + \sum_{i^* \in R_i} f_{i^*} + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \notin R_i} 2c_{\sigma^*(j)j}                                                                                                                             \\
+      & + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \alert{\in R_i \setminus\{i^{'}\}}} (c_{\sigma^*(j)j} - c_{\sigma(j)j}) + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \in R_i} (c_{i'j} - c_{\sigma(j)j})                      \\
+  \end{align*}
+\end{frame}
+
+\begin{frame}{がんばろう (2/2)}
+  最後の二つの和に着目すると、
+  \small{
+    \begin{align*}
+          & \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \in R_i \setminus\{i^{'}\}} (c_{\sigma^*(j)j} - c_{\sigma(j)j}) + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \in R_i} (c_{i'j} - c_{\sigma(j)j})                                        \\
+      =   & \sum_{j \in D \colon \sigma(j) = i \text{ and } \alert{\sigma^*(j) \in R_i \setminus\{i^{'}\}}} (c_{\sigma^*(j)j} + c_{i'j} - 2c_{\sigma(j)j}) + \sum_{j \in D \colon \sigma(j) = i \text{ and } \alert{\sigma^*(j) = i^{'}}} (c_{i'j} - c_{\sigma(j)j})             \\
+      \le & \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \in R_i \setminus\{i^{'}\}} (c_{\sigma^*(j)j} + c_{i'j} - 2c_{\sigma(j)j}) + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) = i^{'}} \alert{2c_{\sigma^*(j)j}}                              \\
+      \le & \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \in R_i \setminus\{i^{'}\}} (c_{\sigma^*(j)j} + \alert{(c_{\sigma^*(j)j} + 2c_{\sigma(j)j})} - 2c_{\sigma(j)j}) + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) = i^{'}} 2c_{\sigma^*(j)j} \\
+      =   & \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \in R_i \setminus\{i^{'}\}} 2c_{\sigma^*(j)j} + \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) = i^{'}} 2c_{\sigma^*(j)j}                                                                   \\
+      =   & \sum_{j \in D \colon \sigma(j) = i \text{ and } \sigma^*(j) \in R_i} 2c_{\sigma^*(j)j}
+    \end{align*}
+  }
+\end{frame}
+
+\begin{frame}{そしてついに}
+  よって、
+  \[
+    0 \le - f_i + \sum_{i^* \in R_i} f_{i^*} + \sum_{j \in D \colon \sigma(j) = i} 2c_{\sigma^*(j)j}
+  \]
+  が成立する。
+
+  両辺を \(f_i\) で割り、全ての安全でない施設 \(i \in S\) について和を取ると、
+  \[
+    \sum_{i \in S \colon i \text{ is unsafe}} f_i \le \sum_{i \in S \colon i \text{ is unsafe}} \sum_{i^* \in R_i} f_{i^*} + \sum_{i \in S \colon i \text{ is unsafe}} \sum_{j \in D \colon \sigma(j) = i} 2c_{\sigma^*(j)j}
+  \]
+
+  最後に、左辺は \(F\) の安全でない施設部分を表し、右辺の第 1 項は \(F^*\) に対応し、第 2 項は \(2C^*\) に対応することに注意すると、補題が示されたことになる。
+\end{frame}
+
+\begin{frame}[standout]
+  Break time!
+\end{frame}
+
+\begin{frame}{施設配置問題に対する局所探索アルゴリズム}
+  \begin{theorem}[\cite{charikar2005improved}]
+    施設配置問題に対して，任意の定数 \(\varepsilon > 0\) に対し，
+    \alert{\(\tilde{\mathcal{O}}(n^2/\varepsilon)\)} 時間で \alert{\(1 + \sqrt{2} + \varepsilon\)} 倍の近似解を求めるスキームが存在する．
+  \end{theorem}
+\end{frame}
+
+\begin{frame}{施設配置問題に対する近似アルゴリズムまとめ}
+  \begin{table}[]
+    \centering
+    \begin{tabular}{lcc}
+      \toprule
+      アルゴリズム                              & 近似比                     & 計算量                                      \\
+      \midrule
+      確定的ラウンディング                          & 4                       & ?                                        \\
+      乱択ラウンディング                           & 3 (期待値)                 & ?                                        \\
+      主双対法                                & 3                       &                                          \\
+      貪欲法 (双対フィット法による解析)                  & 2                       &                                          \\
+      貪欲法 (きわめて複雑な解析)                     & 1.61                    &                                          \\
+      局所探索法~(\cite{arya2004local})        & 3                       &                                          \\
+      局所探索法~(\cite{charikar2005improved}) & \(2.414 + \varepsilon\) & \(\tilde{\mathcal{O}}(n^2/\varepsilon)\) \\
+      \cite{li2013a}                      & 1.488                   &                                          \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  下界としては、\(\mathcal{P} \neq \mathcal{NP}\) のもとで、1.463-近似アルゴリズムが存在しないことが知られている。
 \end{frame}
 
 \begin{frame}[allowframebreaks]{References}
