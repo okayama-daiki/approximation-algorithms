@@ -1,0 +1,125 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Packages
+\usepackage{amsthm}        % For theorems
+\usepackage{amsmath}       % For math
+\usepackage{luatexja}      % For Japanese
+\usepackage{booktabs}      % For formal tables
+\usepackage{mathtools}
+\usepackage{amssymb}       % For checkmark
+\usepackage{ulem}          % For strikeout
+\usepackage[dvipsnames]{xcolor} % For colors (i.e. ForestGreen)
+\usepackage[noend]{algpseudocode}
+\usepackage[backend=biber,
+  style=authoryear,
+  sorting=none
+]{biblatex}    % For bibliography
+\usepackage{tikz}          % For figures
+\usepackage{multirow}      % For multiorow in tables
+\usepackage{xspace}            % For proper spacing after macros
+\usepackage{thmtools}
+\usepackage{thm-restate}
+\usetikzlibrary{
+  calc,
+  tikzmark,
+  arrows.meta,
+  chains,
+  decorations.pathmorphing,
+  patterns,
+}
+
+\makeatletter
+\pgfdeclaredecoration{penciline}{initial}{
+    \state{initial}[width=+\pgfdecoratedinputsegmentremainingdistance,auto corner on length=1mm,]{
+        \pgfpathcurveto%
+        {% From
+            \pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}
+                            {\pgfdecorationsegmentamplitude}
+        }
+        {%  Control 1
+        \pgfmathrand
+        \pgfpointadd{\pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}{0pt}}
+                        {\pgfqpoint{-\pgfdecorationsegmentaspect\pgfdecoratedinputsegmentremainingdistance}%
+                                        {\pgfmathresult\pgfdecorationsegmentamplitude}
+                        }
+        }
+        {%TO 
+        \pgfpointadd{\pgfpointdecoratedinputsegmentlast}{\pgfpoint{1pt}{1pt}}
+        }
+    }
+    \state{final}{}
+}
+\makeatother
+
+\addbibresource{references.bib}
+
+% Custom commands
+\DeclareMathOperator{\interior}{int}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+% Macro
+\newcommand{\cost}{\text{cost}}
+\newcommand{\costassign}[1]{\text{cost}_{assign}{#1}}
+\newcommand{\costopen}[1]{\text{cost}_{open}{#1}}
+\newcommand{\opt}{(S^*, \sigma^*)}
+\newcommand*{\localopt}{(S, \sigma)}
+\newcommand{\ALG}{\text{\upshape ALG}\xspace}
+\newcommand{\OPT}{\text{\upshape OPT}\xspace}
+
+\newcommand{\FacilitySet}{\mathcal{F}}
+\newcommand{\DemandSet}{\mathcal{D}}
+\newcommand{\unsafe}{\text{unsafe}}
+\newcommand{\safe}{\text{safe}}
+\newcommand{\isafe}{\info{i_{\text{safe}}}}
+\newcommand{\iunsafe}{\alert{i_{\text{unsafe}}}}
+
+% Beamer settings
+\usepackage{caption}
+\captionsetup[figure]{labelformat=empty}
+
+% \setbeamertemplate{theorems}[numbered]
+\addtobeamertemplate{theorem begin}{\normalfont}{}
+\newtheorem*{theorem*}{Theorem (restated)}
+\newtheorem*{lemma*}{Lemma (restated)}
+\newtheorem*{sproof}{Sketch of the proof.}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+
+% \setbeameroption{hide notes}
+% \setbeameroption{show only notes}
+% \setbeameroption{show notes on second screen=right}
+% \includeonlyframes{current}
+
+\newcommand{\info}[1]{\textcolor{ForestGreen}{#1}}
+\newcommand{\out}[1]{\textcolor{lightgray}{#1}}
+
+% Theme
+\usetheme[
+  block=fill,
+  % progressbar=foot,
+  % numbering=fraction,
+]{metropolis}
+\usecolortheme{default}
+
+% Fonts
+\setbeamerfont{title}{size=\large,series=\bfseries}
+\setbeamerfont{theorem}{shape=\upshape}
+\usefonttheme{professionalfonts}
+\usefonttheme{structurebold}
+\setbeamerfont{title}{size=\LARGE}
+\setbeamerfont{date}{size=\small}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+\setmainfont{Latin Modern Roman}
+\usepackage{luatexja-fontspec}
+\usepackage[T1]{fontenc}
+\usepackage{mlmodern}
+\usepackage{luatexja-otf}
+\renewcommand{\kanjifamilydefault}{\gtdefault} % 既定欧文フォントがサンセリフなので，既定和文フォントもゴシック体に設定する
+\renewcommand{\familydefault}{\sfdefault}
+
+\begin{document}
+
+
+\end{document}

@@ -1,0 +1,653 @@
+\section{施設配置問題と局所探索アルゴリズム}
+
+\begin{frame}{施設配置問題（Uncapacitated Metric Facility Location）}
+  本スライドでは，\alert{容量制限のないメトリック施設配置問題}を考える。
+
+  \begin{itemize}
+    \item \(\FacilitySet\)：施設集合，\(\DemandSet\)：需要（顧客）集合
+    \item 各施設 \(i \in \FacilitySet\) には開設コスト \(f_i \ge 0\) が与えられている
+    \item \(\FacilitySet \cup \DemandSet\) 上に距離関数
+          \[
+            c \colon (\FacilitySet \cup \DemandSet) \times (\FacilitySet \cup \DemandSet) \to \mathbb{R}_{\ge 0}
+          \]
+          が定義されている
+    \item 距離 \(c(\cdot,\cdot)\) はメトリック
+          （非負性・対称性・三角不等式）を満たす
+  \end{itemize}
+  \vskip 1em
+
+  \usebeamercolor{block body}
+  \begin{beamercolorbox}[
+      wd=\linewidth,
+      sep=1ex,
+      leftskip=1ex,
+      rightskip=1ex,
+      colsep*=0pt,
+    ]{block body}
+    \textbf{目的：}\;
+    開設コストと割り当てコストの総和を最小化する
+  \end{beamercolorbox}
+
+  \vskip -1em
+
+  \[
+    \min_{S \subseteq \FacilitySet,\;\sigma \colon \DemandSet \to S}
+    \left(
+    \sum_{i \in S} f_i
+    \;+\;
+    \sum_{j \in \DemandSet} c_{\sigma(j)j}
+    \right)
+  \]
+
+  \note{
+    \begin{itemize}
+      \item 解は「開設する施設集合 \(S\)」と「割当 \(\sigma\)」の組で表される
+      \item 局所探索では，この \((S,\sigma)\) を少しずつ変更して改善を試みる
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{施設配置問題に対する局所探索アルゴリズム}
+  適当な非空集合から開始し、追加／削除／交換移動をコストが改善する限り繰り返す。
+
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/neighborhood.drawio.png}
+  \end{figure}
+
+  \note{
+    \begin{itemize}
+      \item 施設が 3 つで、8 人の顧客がその周囲に配置されているようなインスタンス
+      \item この楕円一つ一つが、このインスタンスに対する実行可能解を表している（オレンジで示した開設した施設に対して、利用者は開設中の最寄りの施設に割り当てている）
+      \item これらの解に対して、近さという概念を導入することにする
+      \item
+      \item すなわち本スライドで定義する近傍というのは、開設した施設集合
+      \item 解のコストが小さくなるほど右に描画する
+    \end{itemize}
+  }
+\end{frame}
+
+\section{局所最適解の解析}
+
+\begin{frame}{施設配置問題に対する局所最適解の性質}
+  \begin{lemma}[割り当てコストの上界、前回示した]
+    局所最適解 \(\localopt\) に対して、
+    \(C \le F^* + C^* = \OPT\)
+    が成立する。
+  \end{lemma}
+
+  \begin{lemma}[開設コストの上界、本発表で示す]
+    局所最適解 \(\localopt\) に対して、
+    \(F \le F^* + 2C^*\)
+    が成立する。
+  \end{lemma}
+
+  \begin{theorem}[\cite{arya2004local}]
+    施設配置問題の局所最適解 \(\localopt\) の総コストは、高々 \(3\OPT\) である。
+  \end{theorem}
+
+  \textbf{Proof. } 局所最適解の総コストは \(C + F\) であり、上の 2 つの補題より、
+  \[C + F \le (F^* + C^*) + (F^* + 2C^*) = 2F^* + 3C^* < 3F^* + 3C^* = 3\OPT.\]
+
+  \note{
+    \begin{itemize}
+      \item いろいろ示唆に富んだ補題
+      \item 任意の最適解に対してこの補題が成り立つという点
+      \item \(F^* + C^*\) が一致すればよいので、極端な話、\(F^*\) が非常に大きく \(C^*\) が非常に小さい場合ような最適解に対しても成り立つ
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{施設配置問題に対する局所最適解のタイトな例}
+
+  局所最適解の総コストが最適値の少なくとも \(3 - o(1)\) 倍になる例~(\cite{arya2004local})．
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/lower-bound.drawio.png}
+  \end{figure}
+
+  \note{
+    \begin{itemize}
+      \item まずインスタンスの説明（開設コスト \(0\) の施設が \(k+1\) 個，開設コスト \(2k\) の施設が \(1\) 個，顧客が \(k+1\) 人、すべての距離が \(1\) であること）
+      \item 施設 \(i_0\) を開設し、各顧客をそれぞれの施設に割り当てる解のコストが \(2k + (k+1) = 3k + 1\) であること
+      \item 追加操作、交換操作によって解の値が改善されないので、これは局所最適解であること
+      \item 最適解は、施設 \(i_0\) 以外の施設をすべて開設し、各顧客をそれぞれの施設に割り当てる解であり、そのコストは \(k + 1\) であること
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{準備：記法}
+  局所最適解 \((S, \sigma)\) と最適解 \((S^*, \sigma^*)\) を任意に一つずつ固定する。
+  \begin{itemize}
+    \item \(\sigma\)
+    \item \(\phi\)
+  \end{itemize}
+\end{frame}
+
+\subsection{割り当てコストの上界}
+
+\subsection{開設コストの上界}
+
+\begin{frame}{準備：再割当てにおけるコストの増加分の上界}
+  \begin{lemma}[再割当てにおけるコストの増加分の上界]
+    施設 \(\sigma(j) = i\) と \(i_{\unsafe}' = \phi(\sigma^*(j))\) が異なるような任意の利用者 \(j\) を考える。\\
+    このとき、利用者 \(j\) を施設 \(i\) から施設 \(i_{\unsafe}'\) に再割当てしたときのコストの増加分 (\(\alert{c_{i_{\unsafe}'j} - c_{ij}}\)) は、
+    高々 \(\alert{2c_{\sigma^*(j)j}}\) である。
+  \end{lemma}
+
+  \vskip -1.5em
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=0.9\textwidth]{figures/reassignment.drawio.png}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \only<1>{
+        \begin{figure}
+          \centering
+          \includegraphics[width=0.9\textwidth]{figures/reassignment-case2.drawio.png}
+        \end{figure}
+      }
+      \only<2>{
+        \textbf{Proof. }
+        三角不等式と \(\phi\) の定義から、
+        \begin{align*}
+          c_{i_{\unsafe}'j} & \le c_{i_{\unsafe}'\sigma^*(j)} + c_{\sigma^*(j)j}                 \\
+                            & \le c_{\alert{i}\sigma^*(j)} + c_{\sigma^*(j)j}                    \\
+                            & \le (c_{\alert{ij}} + c_{\alert{j\sigma^*(j)}}) + c_{\sigma^*(j)j}
+        \end{align*}
+        \(\qquad \Rightarrow \alert{c_{i_{\unsafe}'j} - c_{ij} \le 2c_{\sigma^*(j)j}}\).
+
+        \hfill\(\qed\)
+      }
+    \end{column}
+  \end{columns}
+
+  \note<1>{
+    \begin{itemize}
+      \item これから削除移動や交換移動を考えるが、今割り当てられている施設が閉じてしまった場合にどうするか少し予習
+      \item \(j\) さんが次にサービスを受ける施設の決め方としてあり得るものは、最適解において割り当てられていた施設から最も近い施設に割り当て直す方法である（もちろんそのような施設が存在すれば）
+      \item 直感的にはそこまで悪くなさそうで、実際にこの割り当ての変化によるコストの増加分は、三角不等式によって上界を与えることができるというのがこの補題
+    \end{itemize}
+    ---
+    \begin{itemize}
+      \item ちなみに増加分と明記している通り、\(c_{i_{\unsafe}'j} - c_{ij}\) は必ず非負になることに注意（各利用者は開設集合に最も近い施設に割り当てられるので）
+    \end{itemize}
+  }
+
+  \note<2>{
+    \begin{itemize}
+      \item 第一式と第三式が三角不等式、第二式が \(\phi\) の定義から従う
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{開設コストの上界}
+  \begin{lemma}[開設コストの上界]
+    局所最適解 \(\localopt\) に対して、
+    \(F \le F^* + 2C^*\)
+    が成立する。
+  \end{lemma}
+
+  \only<1>{
+    \textbf{Key idea.}
+    \structure{局所最適解の施設集合に対して施設を削除したり、（最適解の施設集合の施設を）追加したり、交換したりする}
+
+    \begin{align*}
+       & \text{(施設の開閉に伴うコストの変化)}
+      + \text{(割り当ての変化に伴うコスト)} \alert{\ge 0} \\
+    \end{align*}
+  }
+
+  \only<2>{
+    \textbf{Sketch of the Proof.}
+    \begin{enumerate}
+      \item \(S\) の各施設を、（直前の補題の利用可能性の意味で）\info{安全}、\alert{安全でない}施設に分類する
+      \item \info{安全}な各施設に対して削除移動を考え、上界を得る
+      \item \alert{安全でない}各施設に対して、（対応する最適解の施設の／との）追加／交換移動を考え、上界を得る
+      \item 以上の上界を全て足し合わせて、開設コストの上界を得る
+    \end{enumerate}
+
+    \(f_{\isafe} \le \sum_{j \in \DemandSet \colon \sigma(j) = \isafe} 2c_{\sigma^*(j)j}\)
+
+    \(\hfill f_{\iunsafe} \le \sum_{i^* \in R_{\iunsafe} (\subseteq S^*)} f_{i^*} + \sum_{j \in D \colon \sigma(j) = \iunsafe} 2c_{\sigma^*(j)j}\)
+  }
+
+  \note<2>{
+    \begin{itemize}
+      \item \(R\) は後で定義する、とりあえず今は \(\iunsafe\) に対応する \(S^*\) の部分集合と考えておく
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{準備：安全な施設と安全でない施設}
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/safe-facility.drawio.png}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{definition}[安全な施設]
+        施設 \(i \in S\) が\info{安全}であるとは、
+        最適解の全ての施設 \(i^* \in S^*\) について、
+        \[
+          \phi(i^*) \neq i
+        \]
+        が成立することである。
+      \end{definition}
+      逆に、ある施設 \(i^* \in S^*\) について、
+      \[
+        \phi(i^*) = i
+      \]
+      が成立する場合、施設 \(i\) を\alert{安全でない}とよぶ。
+    \end{column}
+  \end{columns}
+
+  \note{
+    \begin{itemize}
+      \item 何に対して安全／安全でないと言っているのかは次のスライドですぐに明らかになる
+      \item ネタバレすると、安全な施設はすべて削除移動の対象となる
+      \item 安全でない施設と、\(S^*\) の最も最寄りの施設が交換移動の対象となる
+      \item 残りの \(S^*\) の施設は追加移動の対象とな
+    \end{itemize}
+  }
+\end{frame}
+
+% \begin{frame}{補足：安全でない施設 \(i \in S \bigcap S^*\) に対する集合 \(R_i\) と施設 \(i_{\unsafe}'\)}
+%   \begin{columns}
+%     \begin{column}{0.45\textwidth}
+%       \begin{figure}
+%         \centering
+%         \includegraphics[width=\textwidth]{figures/unsafe-facility-add.drawio.png}
+%       \end{figure}
+%     \end{column}
+%     \begin{column}{0.45\textwidth}
+%       \begin{itemize}
+%         \item \alert{安全でない施設} \(\alert{i} \in S \bigcap S^*\) を固定する
+%         \item 最適解の施設 \(i^* \in S^*\) であって、\(\phi(i^*) = \alert{i}\) を満たすものを \(R_i (\subseteq S^*)\) とする
+%               \begin{itemize}
+%                 \item この場合、\(i \in R_i\)？
+%               \end{itemize}
+%         \item このとき、\(i_{\unsafe}' = i\) になるの？
+%       \end{itemize}
+%     \end{column}
+%   \end{columns}
+% \end{frame}
+
+\begin{frame}{\info{安全}な施設の開設コストの上界：削除移動による不等式の導出}
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+        \centering
+        \only<1>{\includegraphics[width=\textwidth]{figures/safe-facility-delete.drawio.png}}
+        \only<2->{\includegraphics[width=\textwidth]{figures/safe-facility-delete-2.drawio.png}}
+      \end{figure}
+    \end{column}
+
+    \begin{column}{0.45\textwidth}
+      \only<1-2>{
+        \begin{itemize}
+          \item \info{安全}な施設 \(\isafe \in S\) を一つ選び削除
+          \item 局所最適解において \(\isafe\) に割り当てられていた各利用者\\ \(j: \sigma(j) = \isafe\) について、 \\
+                \uncover<2>{
+                  \(\qquad\qquad\qquad \Downarrow\) \\
+                  最適解において \(j\) が割り当てられていた施設 \( \sigma^*(j) \) に最も近い \(S\) の施設 \(\alert{\phi(\sigma^*(j))}\) に割り当てる
+                  \begin{itemize}
+                    \item 必ず \(\alert{\phi(\sigma^*(j))} \neq \isafe\)
+                  \end{itemize}
+                }
+        \end{itemize}
+      }
+      \small{
+        \only<3->{
+          \vskip 0.5em
+          次式が得られる：
+          \begin{align*}
+             & \underbrace{\sum_{i \in S} f_i + \sum_{j \in \DemandSet} c_{\sigma(j)j}}_{\text{局所最適解 } (S, \sigma) \text{ のコスト}}                                                                                                                                           \\
+             & \left(\le \underbrace{S - \{\isafe\} \text{ の下で最適な割り当てをした解のコスト}}_{(S, \sigma) \text{ の近傍解のコスト}}\right)                                                                                                                                                      \\
+             & \le \underbrace{\sum_{i \in S \setminus \{\isafe\}} f_i + \sum_{j \in \DemandSet \colon \sigma(j) \neq \isafe} c_{\sigma(j)j} + \sum_{j \in \DemandSet \colon \sigma(j) = \isafe} \alert{c_{\phi(\sigma^*(j))j}}}_{(S, \sigma) \text{ の近傍解の割り当てをいじった解のコスト}} \\
+          \end{align*}
+          \vskip -4.5em
+        }
+        \only<4->{
+          \begin{align*}
+            \Rightarrow f_{\isafe} & \le \sum_{j \in \DemandSet \colon \sigma(j) = \isafe} (c_{\phi(\sigma^*(j))j} - c_{\sigma(j)j}) \\
+                                   & \le \sum_{j \in \DemandSet \colon \sigma(j) = \isafe} \alert{2c_{\sigma^*(j)j}}
+          \end{align*}
+        }
+      }
+    \end{column}
+  \end{columns}
+
+  \note<2>{
+    \begin{itemize}
+      \item \(\isafe\) に割り当てられていない利用者の割り当ては変更しない
+    \end{itemize}
+  }
+
+  \note<4>{
+    \begin{itemize}
+      \item 最後の不等式は、先ほどの補題を利用している
+      \item 安全な各施設に対して、対応する利用者の最適解における割り当てコストを用いた上界が得られた。
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}[plain, noframenumbering]{【再掲】準備：安全な施設と安全でない施設}
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/safe-facility.drawio.png}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{definition}[安全な施設]
+        施設 \(i \in S\) が\info{安全}であるとは、
+        最適解の全ての施設 \(i^* \in S^*\) について、
+        \[
+          \phi(i^*) \neq i
+        \]
+        が成立することである。
+      \end{definition}
+      逆に、ある施設 \(i^* \in S^*\) について、
+      \[
+        \phi(i^*) = i
+      \]
+      が成立する場合、施設 \(i\) を\alert{安全でない}とよぶ。
+    \end{column}
+  \end{columns}
+
+  \note{
+    \begin{itemize}
+      \item 削除操作をスムーズに説明できなかった場合のために、もう一度説明する
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{\alert{安全でない}施設の開設コストの上界：施設に対応する最適解の施設集合の定義}
+  \begin{columns}
+    \begin{column}{0.40\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/Ri.drawio.png}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.50\textwidth}
+      \begin{itemize}
+        \item \alert{安全でない}施設 \(\iunsafe\) を固定
+        \item \(\iunsafe\) に対し \(S^*\) の部分集合 \(R_{\iunsafe} (\subseteq S^*)\) と \(i_{\unsafe}'\) を定義
+              \begin{align*}
+                R_{\iunsafe} & = \{i^* \in S^* \mid \phi(i^*) = \iunsafe\}       \\
+                i_{\unsafe}' & = \argmin_{i^* \in R_{\iunsafe}} c_{i^* \iunsafe}
+              \end{align*}
+      \end{itemize}
+
+      \vskip -1em
+
+      \begin{block}{これからのお話}
+        \begin{itemize}
+          \item \(R_{\iunsafe} \setminus {i_{\unsafe}'}\) の各施設の追加移動、\(\iunsafe\) と \(i_{\unsafe}'\) の交換移動を考える
+          \item 得られた \(|R_{\iunsafe}|\) 個の不等式を足し\\合わせ、\(\iunsafe\) の開設コストの上界を得る
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \note{
+    \begin{itemize}
+      \item 図の場合 (\(i \notin S^*\)) は、\(R_i \subseteq S^* \setminus S\)
+      \item ちなみに、\(i_{\unsafe}' \in S^* \setminus S\) か、さもなければ、\(i_{\unsafe}' = i\)
+      \item \(\alert{\iunsafe}\) は安全でない \(\Leftrightarrow R_i \neq \emptyset\) ことを確認する
+      \item \(\alert{\iunsafe}\) に最も近い \(R_{\iunsafe}\) の施設を \(i_{\unsafe}'\) とする
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{\alert{安全でない}施設の開設コストの上界：追加移動による不等式の導出}
+  \begin{columns}
+    \begin{column}{0.40\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/unsafe-facility-add.drawio.png}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.50\textwidth}
+
+      \only<1>{
+        \begin{itemize}
+          \item 施設 \(i^{*} \in {R_i \setminus \{i_{\unsafe}'\}}\) を開設
+          \item 局所最適解において \(\iunsafe\) に、\\さらに最適解において \(i^*\) に\\割り当てられていた各利用者\\ \(j: \sigma(j) = \iunsafe \text{ and } \sigma^*(j) = i^{*}\) について、 \\
+                \(\qquad\qquad\qquad \Downarrow\) \\
+                \(i^*\) に割り当てる
+        \end{itemize}
+      }
+      \small{
+        \only<2->{
+          \vskip 0.5em
+          次式が得られる：
+          \begin{align*}
+             & \underbrace{\sum_{i \in S} f_i + \sum_{j \in \DemandSet} c_{\sigma(j)j}}_{\text{局所最適解 } (S, \sigma) \text{ のコスト}}                                                                                                                             \\
+             & \left(\le \underbrace{S \cup \{i^{*}\} \text{ の下で最適な割り当てをした解のコスト}}_{(S, \sigma) \text{ の近傍解のコスト}}\right)                                                                                                                                      \\
+             & \underbrace{\begin{aligned} \le \sum_{i \in S \cup \{i^{*}\}} f_i & + \sum_{j \in \DemandSet \colon \overline{\sigma(j) = \iunsafe \text{ and } \sigma^*(j) = i^{*}}} c_{\sigma(j)j} \\
+                                                      & + \sum_{j \in \DemandSet \colon \sigma(j) = \iunsafe \text{ and } \sigma^*(j) = i^{*}} \alert{c_{\sigma^*(j)j}}
+                             \end{aligned}}_{(S, \sigma) \text{ の近傍解の割り当てをいじった解のコスト}} \\
+          \end{align*}
+          \vskip -4.5em
+        }
+        \only<3>{
+          \begin{align*}
+            \Rightarrow 0 & \le f_{i^*} + \sum_{j \in \DemandSet \colon \sigma(j) = \iunsafe \text{ and } \sigma^*(j) = i^{*}} (c_{\sigma^*(j)j} - c_{\sigma(j)j}) \\
+          \end{align*}
+        }
+      }
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[plain, noframenumbering]{【再掲】\alert{安全でない}施設の開設コストの上界：施設に対応する最適解の施設集合の定義}
+  \begin{columns}
+    \begin{column}{0.40\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/Ri.drawio.png}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.50\textwidth}
+      \begin{itemize}
+        \item \alert{安全でない}施設 \(\iunsafe\) を固定
+        \item \(\iunsafe\) に対し \(S^*\) の部分集合 \(R_{\iunsafe} (\subseteq S^*)\) と \(i_{\unsafe}'\) を定義
+              \begin{align*}
+                R_{\iunsafe} & = \{i^* \in S^* \mid \phi(i^*) = \iunsafe\}       \\
+                i_{\unsafe}' & = \argmin_{i^* \in R_{\iunsafe}} c_{i^* \iunsafe}
+              \end{align*}
+      \end{itemize}
+
+      \vskip -1em
+
+      \begin{block}{これからのお話}
+        \begin{itemize}
+          \item \(R_{\iunsafe} \setminus {i_{\unsafe}'}\) の各施設の追加移動、\(\iunsafe\) と \(i_{\unsafe}'\) の交換移動を考える
+          \item 得られた \(|R_{\iunsafe}|\) 個の不等式を足し\\合わせ、\(\iunsafe\) の開設コストの上界を得る
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \note{
+    \begin{itemize}
+      \item 図の場合 (\(i \notin S^*\)) は、\(R_i \subseteq S^* \setminus S\)
+      \item ちなみに、\(i_{\unsafe}' \in S^* \setminus S\) か、さもなければ、\(i_{\unsafe}' = i\)
+      \item \(\alert{\iunsafe}\) は安全でない \(\Leftrightarrow R_i \neq \emptyset\) ことを確認する
+      \item \(\alert{\iunsafe}\) に最も近い \(R_{\iunsafe}\) の施設を \(i_{\unsafe}'\) とする
+    \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}{\alert{安全でない}施設の開設コストの上界：交換移動による不等式の導出}
+  \begin{columns}
+    \begin{column}{0.40\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/unsafe-facility-swap.drawio.png}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.50\textwidth}
+      \only<1>{
+        \begin{block}{重要な事実}
+          \(\sigma^*(j) \in R_{\iunsafe} \Leftrightarrow \phi(\sigma^*(j)) = \iunsafe\)
+        \end{block}
+
+        \begin{itemize}
+          \item \(\iunsafe\) を閉鎖し、施設 \(i_{\unsafe}'\) を開設
+          \item 局所最適解において \(\iunsafe\) に割り当てられていた各利用者\\ \(j: \sigma(j) = \iunsafe\) について、
+                \begin{itemize}
+                  \item \(\sigma^*(j) \in R_{\iunsafe}\) であれば、\\\(j\) を \(i_{\unsafe}'\) に割り当てる
+                  \item \(\sigma^*(j) \notin R_{\iunsafe}\) であれば、\\\(j\) を \(\phi(\sigma^*(j))\) に割り当てる
+                \end{itemize}
+        \end{itemize}
+      }
+      \small{
+        \only<2>{
+          % 次式が得られる：
+          \begin{align*}
+             & \underbrace{\sum_{i \in S} f_i + \sum_{j \in \DemandSet} c_{\sigma(j)j}}_{\text{局所最適解 } (S, \sigma) \text{ のコスト}}                                                                                         \\
+             & \left(\le \underbrace{S \cup \{i_{\unsafe}'\} \setminus \{\iunsafe\} \text{ の下で最適な割り当てをした解のコスト}}_{(S, \sigma) \text{ の近傍解のコスト}}\right)                                                                    \\
+             & \underbrace{\begin{aligned}
+                               \le \sum_{i \in S \cup \{i_{\unsafe}'\} \setminus \{\iunsafe\}} f_i
+                                & + \sum_{j \in D \colon \sigma(j) \neq \iunsafe} c_{\sigma(j)j}                                                   \\
+                                & + \sum_{j \in D \colon \sigma(j) = \iunsafe \text{ and } \sigma^*(j) \in R_{\iunsafe}} c_{i_{\unsafe}'j}         \\
+                                & + \sum_{j \in D \colon \sigma(j) = \iunsafe \text{ and } \sigma^*(j) \notin R_{\iunsafe}} c_{\phi(\sigma^*(j))j}
+                             \end{aligned}}_{(S, \sigma) \text{ の近傍解の割り当てをいじった解のコスト}} \\
+          \end{align*}
+        }
+        \only<3>{
+          \begin{align*}
+            \Rightarrow f_{\iunsafe} & \le \begin{aligned}[t]
+                                             f_{i_{\unsafe}'}
+                                              & + \sum_{j \in D \colon \sigma(j) = \iunsafe \text{ and } \sigma^*(j) \in R_{\iunsafe}} (c_{i_{\unsafe}'j} - c_{\sigma(j)j})         \\
+                                              & + \sum_{j \in D \colon \sigma(j) = \iunsafe \text{ and } \sigma^*(j) \notin R_{\iunsafe}} (c_{\phi(\sigma^*(j))j} - c_{\sigma(j)j})
+                                           \end{aligned} \\
+                                     & \le \begin{aligned}[t]
+                                             f_{i_{\unsafe}'}
+                                              & + \sum_{j \in D \colon \sigma(j) = \iunsafe \text{ and } \sigma^*(j) \in R_{\iunsafe}} (c_{i_{\unsafe}'j} - c_{\sigma(j)j}) \\
+                                              & + \sum_{j \in D \colon \sigma(j) = \iunsafe \text{ and } \sigma^*(j) \notin R_{\iunsafe}} \alert{2c_{\sigma^*(j)j}}
+                                           \end{aligned}
+          \end{align*}
+        }
+      }
+    \end{column}
+  \end{columns}
+
+  \note<1>{
+    \begin{itemize}
+      \item 安全でない施設 \(\iunsafe\) を \(S \bigcap S^*\) から選んだ場合、\(i_{\unsafe}' = \iunsafe\) になる
+      \item 各利用者 \(j: \sigma(j) = \iunsafe\) について、まず全員 \(\phi(\sigma^*(j))\) に割り当て直すと考えたほうがいいかもしれない、しかしながらいくつかの利用者は \(\iunsafe\) を利用しようとするはずで、その場合は \(i_{\unsafe}'\) に割り当て直すだけ。そしてそういう利用者の集合は \(\sigma^*(j) \in R_{\iunsafe}\) に他ならない
+    \end{itemize}
+  }
+
+  \note<3>{
+    \begin{itemize}
+      \item \(c_{i_{\unsafe}'j} - c_{\phi(j)j}\) はそのまま放置するんですか？
+      \item 他の場合と異なり、\(i_{\unsafe}'\) への割り当て\(c_{\sigma^*(j)j}\) の定数倍で抑えられる保証がない
+    \end{itemize}
+  }
+\end{frame}
+
+% \begin{frame}[standout]
+%   \begin{figure}
+%     \centering
+%     \includegraphics[width=0.3\textwidth]{figures/danger.png}
+%   \end{figure}
+
+%   次のスライドで大変ショッキングな数式が表示されます。
+
+%   心臓の弱い方はご注意ください。
+% \end{frame}
+
+\begin{frame}{\alert{安全でない}施設の開設コストの上界：不等式の足し合わせ (1/3)}
+
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/Ri.drawio.png}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \vskip 1em
+
+      \small{
+        \structure{各 \(i^* \in R_{\iunsafe} \setminus \{i_{\unsafe}'\}\) に対して、}
+        \begin{align*}
+          0 & \le f_{i^*} + \sum_{j \in \DemandSet \colon \sigma(j) = \iunsafe \text{ and } \sigma^*(j) = i^{*}} (c_{\sigma^*(j)j} - c_{\sigma(j)j}) \\
+        \end{align*}
+
+        \vskip -1em
+
+        \begin{align*}
+          f_{\iunsafe} & \le \begin{aligned}[t]
+                               f_{i_{\unsafe}'}
+                                & + \sum_{j \in D \colon \sigma(j) = \iunsafe \text{ and } \sigma^*(j) \in R_{\iunsafe}} (c_{i_{\unsafe}'j} - c_{\sigma(j)j}) \\
+                                & + \sum_{j \in D \colon \sigma(j) = \iunsafe \text{ and } \sigma^*(j) \notin R_{\iunsafe}} 2c_{\sigma^*(j)j}
+                             \end{aligned}
+        \end{align*}
+      }
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{\alert{安全でない}施設の開設コストの上界：不等式の足し合わせ (2/3)}
+
+  \begin{align*}
+    f_{i_{\unsafe}} \le & \sum_{i^* \in R_{i_{\unsafe}} \setminus \{i_{\unsafe}'\}} \biggl(f_{i^*} + \sum_{j \in \DemandSet \colon \sigma(j) = i_{\unsafe} \text{ and } \sigma^*(j) = i^{*}} (c_{\sigma^*(j)j} - c_{\sigma(j)j})\biggr)                                                                                                              \\
+                        & + \begin{aligned}[t]
+                              f_{i_{\unsafe}'}
+                               & + \sum_{j \in D \colon \sigma(j) = i_{\text{unsafe}} \text{ and } \sigma^*(j) \in R_{i_{\text{unsafe}}}} (c_{i_{\unsafe}'j} - c_{\sigma(j)j}) \\
+                               & + \sum_{j \in D \colon \sigma(j) = i_{\text{unsafe}} \text{ and } \sigma^*(j) \notin R_{i_{\text{unsafe}}}} 2c_{\sigma^*(j)j}
+                            \end{aligned}                                                                              \\
+    =                   & \sum_{i^* \in \alert{R_{i_{\unsafe}}}} f_{i^*} \begin{aligned}[t]
+                                                                            & + \sum_{j \in \DemandSet \colon \sigma(j) = i_{\unsafe} \text{ and } \sigma^*(j) \alert{\in R_{i_{\unsafe}} \setminus \{i_{\unsafe}'\}}} (c_{\sigma^*(j)j} - c_{\sigma(j)j}) \\
+                                                                            & + \sum_{j \in D \colon \sigma(j) = i_{\text{unsafe}} \text{ and } \sigma^*(j) \in R_{i_{\text{unsafe}}}} (c_{i_{\unsafe}'j} - c_{\sigma(j)j})                                \\
+                                                                            & + \sum_{j \in D \colon \sigma(j) = i_{\text{unsafe}} \text{ and } \sigma^*(j) \notin R_{i_{\text{unsafe}}}} 2c_{\sigma^*(j)j}
+                                                                         \end{aligned} \\
+  \end{align*}
+
+\end{frame}
+
+\begin{frame}{\alert{安全でない}施設の開設コストの上界：不等式の足し合わせ (3/3)}
+  中央の二項の和に注目すると、
+  \small{
+    \begin{align*}
+          & \sum_{j \colon \sigma(j) = i_{\unsafe} \text{ and } \sigma^*(j) \in R_{i_{\unsafe}} \setminus\{i_{\unsafe}'\}} (c_{\sigma^*(j)j} - c_{\sigma(j)j}) + \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \in R_i} (c_{i_{\unsafe}'j} - c_{\sigma(j)j})                                 \\
+      =   & \sum_{j \colon \sigma(j) = i_{\unsafe} \text{ and } \alert{\sigma^*(j) \in R_i \setminus\{i_{\unsafe}'\}}} (c_{\sigma^*(j)j} + c_{i_{\unsafe}'j} - 2c_{\sigma(j)j}) + \sum_{j \colon \sigma(j) = i \text{ and } \alert{\sigma^*(j) = i_{\unsafe}'}} (c_{i_{\unsafe}'j} - c_{\sigma(j)j}) \\
+      \le & \sum_{j \colon \sigma(j) = i_{\unsafe} \text{ and } \sigma^*(j) \in R_{i_{\unsafe}} \setminus\{i_{\unsafe}'\}} (c_{\sigma^*(j)j} + \alert{(c_{\sigma^*(j)j} + 2c_{\sigma(j)j})} - 2c_{\sigma(j)j})                                                                                       \\
+          & \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad + \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) = i_{\unsafe}'} \alert{2c_{\sigma^*(j)j}}                                                                                                                     \\
+      =   & \sum_{j \colon \sigma(j) = i_{\unsafe} \text{ and } \sigma^*(j) \in R_{i_{\unsafe}} \setminus\{i_{\unsafe}'\}} 2c_{\sigma^*(j)j} + \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) = i_{\unsafe}'} 2c_{\sigma^*(j)j}                                                               \\
+      =   & \sum_{j \colon \sigma(j) = i_{\unsafe} \text{ and } \sigma^*(j) \in R_{i_{\unsafe}}} 2c_{\sigma^*(j)j}
+    \end{align*}
+  }
+\end{frame}
+
+\begin{frame}{開設コストの上界}
+
+  \info{安全}な各施設に対して
+  \[f_{\isafe} \le \sum_{j \in \DemandSet \colon \sigma(j) = \isafe} 2c_{\sigma^*(j)j}\]
+  \alert{安全でない}各施設に対して、
+  \[\hfill f_{\iunsafe} \le \sum_{i^* \in R_{\iunsafe}} f_{i^*} + \sum_{j \in D \colon \sigma(j) = \iunsafe} 2c_{\sigma^*(j)j}\]
+
+  以上の上界を \(S\) の施設について全て足し合わせることで、補題が得られる。
+  \hfill\qed
+
+  \begin{lemma}[開設コストの上界]
+    局所最適解 \(\localopt\) に対して、
+    \(F \le F^* + 2C^*\)
+    が成立する。
+  \end{lemma}
+
+\end{frame}
