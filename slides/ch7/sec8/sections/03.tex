@@ -1,4 +1,4 @@
-\section{改良された局所探索アルゴリズム}
+\section{局所探索アルゴリズムの実装}
 
 \begin{frame}{施設配置問題に対する改良された局所探索アルゴリズム}
   \begin{theorem}[\cite{charikar2005improved}]
@@ -15,7 +15,7 @@
       \end{itemize}
       \begin{figure}
         \centering
-        \includegraphics[width=\textwidth]{figures/scheme/thresholded-moving.drawio.png}
+        \includegraphics[width=\textwidth]{figures/scheme/scaling.drawio.png}
       \end{figure}
     \end{column}
     \begin{column}{0.45\textwidth}
@@ -32,7 +32,6 @@
   \note{
     \begin{itemize}
       \item これから 2 つの改良アイデアを別個に説明する、その後にこれらを問題なく組み合わせられることを説明する
-      \item
     \end{itemize}
   }
 \end{frame}
@@ -51,88 +50,147 @@
 
 \begin{frame}{改良点①：近似比の解析の概要}
 
-  \begin{tikzpicture}[
-      box/.style={
-          draw,
-          rectangle,
-          align=center,
-          inner sep=6pt
-        },
-      decoration=penciline,
-      >=Latex
-    ]
+  \only<1>{
+    \begin{tikzpicture}[
+        box/.style={
+            draw,
+            rectangle,
+            align=center,
+            inner sep=6pt
+          },
+        decoration=penciline,
+        >=Latex
+      ]
 
-    % -------------------------------------------------
-    % horizontal separator (instance boundary)
-    % -------------------------------------------------
-    \draw[decorate, densely dotted, thick] (-9,1.5) -- (5,1.5);
+      % -------------------------------------------------
+      % horizontal separator (instance boundary)
+      % -------------------------------------------------
+      \draw[decorate, densely dotted, thick] (-9,1.5) -- (5,1.5);
 
-    \useasboundingbox (-3, -2) rectangle (6, 5);
+      \useasboundingbox (-3, -2) rectangle (6, 5);
 
-    \node[anchor=east] at (-5.5,1.9) {\small{元のインスタンス \(\mathcal{I}\)}};
-    \node[anchor=east] at (-5.5,1.1) {\small{変換後のインスタンス \(\mathcal{I}'\)}};
+      \node[anchor=east] at (-3.4,1.9) {\small{元のインスタンス \(\mathcal{I = (\FacilitySet, \DemandSet)}\)}};
+      \node[anchor=east] at (-3.4,1.1) {\small{変換後のインスタンス \(\mathcal{I}' = (\FacilitySet', \DemandSet)\)}};
 
-    % -------------------------------------------------
-    % boxes (top: I)
-    % -------------------------------------------------
-    \node[decorate, box] (Iopt) at (-4.5,4) {
-      \(\mathcal{I}\) の最適解\\
-      割り当てコスト: $C^*$\\
-      配置コスト: $F^*$
-    };
+      % -------------------------------------------------
+      % boxes (top: I)
+      % -------------------------------------------------
+      \node[decorate, box] (Isol) at (2.5,4) {
+        \(\mathcal{I}\) の実行可能解\\
+        割り当てコスト: $C$\\
+        配置コスト: $\mu F$
+      };
 
-    \node[decorate, box] (Isol) at (0.5,4) {
-      \(\mathcal{I}\) の実行可能解\\
-      割り当てコスト: $C$\\
-      配置コスト: $\mu F$
-    };
+      % -------------------------------------------------
+      % boxes (bottom: I')
+      % -------------------------------------------------
+      \node[decorate, box] (Ilocal) at (2.5,-0.5) {
+        \(\mathcal{I}'\) の局所最適解\\
+        割り当てコスト: $C$\\
+        配置コスト: $F$
+      };
 
-    % -------------------------------------------------
-    % boxes (bottom: I')
-    % -------------------------------------------------
-    \node[decorate, box] (Ioptp) at (-4.5,-0.5) {
-      \(\mathcal{I}'\)の実行可能解\\
-      割り当てコスト: $C^*$\\
-      配置コスト: $F^*/\mu$
-    };
+      % -------------------------------------------------
+      % arrows (reinterpretation)
+      % -------------------------------------------------
+      \draw[->, decorate] (Ilocal) -- node[right] {再解釈} (Isol);
 
-    \node[decorate, box] (Ilocal) at (0.5,-0.5) {
-      \(\mathcal{I}'\) の局所最適解\\
-      割り当てコスト: $C$\\
-      配置コスト: $F$
-    };
+      \draw[<-, decorate]
+      (Isol.west) -- ++(-2.5,0)
+      node[left] {出力する};
 
-    % -------------------------------------------------
-    % arrows (reinterpretation)
-    % -------------------------------------------------
-    \draw[->, decorate] (Iopt) -- node[right] {再解釈} (Ioptp);
-    \draw[->, decorate] (Ilocal) -- node[right] {再解釈} (Isol);
+      \draw[<-, decorate]
+      (Ilocal.west) -- ++(-2.5,0)
+      node[left] {求める};
 
-    % -------------------------------------------------
-    % curved arrow (local optimality bound)
-    % -------------------------------------------------
-    \draw[decorate, ->, dashed, bend right=40]
-    (Ioptp) to (Ilocal);
+    \end{tikzpicture}
+  }
 
-    \node (Ilocalub) at (0.8,-2.2) {
-      $\begin{aligned}
-          C & \le C^* + F^*/\mu  \\
-          F & \le 2C^* + F^*/\mu
-        \end{aligned}$
-    };
+  \only<2>{
+    \begin{tikzpicture}[
+        box/.style={
+            draw,
+            rectangle,
+            align=center,
+            inner sep=6pt
+          },
+        decoration=penciline,
+        >=Latex
+      ]
 
-    % -------------------------------------------------
-    % final inequality (right side)
-    % -------------------------------------------------
-    \draw[decorate, ->, dashed, bend right=30] (Ilocalub.east) to (Isol.south east);
+      % -------------------------------------------------
+      % horizontal separator (instance boundary)
+      % -------------------------------------------------
+      \draw[decorate, densely dotted, thick] (-9,1.5) -- (5,1.5);
 
-    \node[align=left] at (4.2,2.8) {
-      $C \le C^* + F^*/\mu$\\
-      $\mu F \le 2\mu C^* + F^*$
-    };
+      \useasboundingbox (-3, -2) rectangle (6, 5);
 
-  \end{tikzpicture}
+      \node[anchor=east] at (-3.4,1.9) {\small{元のインスタンス \(\mathcal{I = (\FacilitySet, \DemandSet)}\)}};
+      \node[anchor=east] at (-3.4,1.1) {\small{変換後のインスタンス \(\mathcal{I}' = (\FacilitySet', \DemandSet)\)}};
 
+      % -------------------------------------------------
+      % boxes (top: I)
+      % -------------------------------------------------
+      \node[decorate, box] (Iopt) at (-2.5,4) {
+        \(\mathcal{I}\) の最適解\\
+        割り当てコスト: $C^*$\\
+        配置コスト: $F^*$
+      };
+
+      \node[decorate, box] (Isol) at (2.5,4) {
+        \(\mathcal{I}\) の実行可能解\\
+        割り当てコスト: $C$\\
+        配置コスト: $\mu F$
+      };
+
+      % -------------------------------------------------
+      % boxes (bottom: I')
+      % -------------------------------------------------
+      \node[decorate, box] (Ioptp) at (-7.5,-0.5) {
+        (\(\mathcal{I}'\)の最適解)
+      };
+
+      \node[decorate, box] (Ioptp) at (-2.5,-0.5) {
+        \(\mathcal{I}'\)の実行可能解\\
+        割り当てコスト: $C^*$\\
+        配置コスト: $F^*/\mu$
+      };
+
+      \node[decorate, box] (Ilocal) at (2.5,-0.5) {
+        \(\mathcal{I}'\) の局所最適解\\
+        割り当てコスト: $C \alert{\le C^* + F^* / \mu}$\\
+        配置コスト: $F \alert{\le 2C^* + F^* / \mu}$
+      };
+
+      % -------------------------------------------------
+      % arrows (reinterpretation)
+      % -------------------------------------------------
+      \draw[->, decorate] (Iopt) -- node[right] {再解釈} (Ioptp);
+      \draw[->, decorate] (Ilocal) -- node[right] {再解釈} (Isol);
+
+      % -------------------------------------------------
+      % curved arrow (local optimality bound)
+      % -------------------------------------------------
+      \draw[decorate, ->, dashed, bend right=30]
+      (Ioptp) to (Ilocal);
+
+      \node (Ilocalub) at (1.2,-2.2) {
+        \alert{補題より}
+      };
+    \end{tikzpicture}
+  }
+
+  \note<2>{
+    \begin{itemize}
+      \item コストの解析のために \(\mathcal{I}\) の最適解を \(\mathcal{I}'\) の実行可能解として再解釈し、この実行可能解を通じて、\(\mathcal{I}'\) の局所最適解のコストを解析する
+      \item なお一般に、\(\mathcal{I}'\) の最適解とこの実行可能解は異なることに注意する
+      \item 補題を適用すると、\(\mathcal{I}'\) の局所最適解の割り当てコスト \(C\) と配置コスト \(F\) はそれぞれ
+            \[
+              C \le C^* + F^*/\mu, \quad F \le 2C^* + F^*/\mu
+            \]
+            を満たす
+    \end{itemize}
+  }
 \end{frame}
 
 \begin{frame}{改良点①：近似比の解析}
@@ -143,7 +201,7 @@
   \vskip -1em
 
   \begin{align*}
-    \underbrace{C + \mu F}_{\text{得られた解の総コスト}} & \le C^* + F^* / \mu + 2\mu C^* + F^* \\
+    \underbrace{C + \mu F}_{\text{得られた解の総コスト}} & \le (C^* + F^* / \mu) + \mu (2 C^* + F^* / \mu) \\
                                                & = (1 + 2\mu) C^* + (1 + 1/\mu) F^*
   \end{align*}
 
@@ -175,66 +233,128 @@
       \only<1>{
         最適解のコストが \(0\) でない限り、任意の実行可能解のコストは少なくとも \(1\) であるため、
         \alert{高々 \(k\) 回の反復でアルゴリズムは停止}する。
+
+        \[
+          \text{実際の反復回数} < k
+        \]
       }
 
       \only<2>{
-        両辺の自然対数を取り整理すると、
+        上式を満たす最小の整数 \(k_{\min}\) について考える。
         \[
-          k > \frac{\log{M}}{-\log{(1 - \delta)}} \ge \frac{\log{M}}{\delta}
+          k_{\min} = \left\lceil \frac{\log{M}}{-\log{(1 - \delta)}} \right\rceil \le \frac{\log{M}}{\delta}
         \]
-        となるため、\alert{反復回数は高々 \(\lceil \log{M}/\delta \rceil\) 回}である。
+        となるため、\\\alert{反復回数は高々 \(\frac{\log{M}}{\delta}\) 回}である。
       }
 
     \end{column}
     \begin{column}{0.52\textwidth}
-      \begin{tikzpicture}[
-          decoration=penciline,
-        ]
-        \begin{axis}[
-            clip=false,
-            domain=-1:10,
-            samples=100,
-            axis lines=middle,
-            xtick={0, 7.5},
-            xticklabels={0, \(k\)},
-            xlabel={\(i\)},
-            xlabel style={
-                at={(axis description cs:0.95,0.03)},
-                anchor=north
-              },
-            ytick={0, 2, 15},
-            yticklabels={0, \(1\), \(M\)},
-            ylabel={\small{解のコスト}},
-            ymin=-1,
-            xmax=10.5,
-            xmin=-1.2,
-            width=8cm,
-            height=6cm,
+      \only<1>{
+        \begin{tikzpicture}[
+            decoration=penciline,
           ]
-          \addplot[mark size=0.5pt] {15 * pow(0.75, x)} node[
-            pos=0,
-            font=\small,
-            anchor=south
-          ] {$M(1-\delta)^i$};
+          \begin{axis}[
+              clip=false,
+              domain=-1:10,
+              samples=100,
+              axis lines=middle,
+              xtick={0, 9},
+              xticklabels={0, \(k\)},
+              xlabel={\(i\)},
+              xlabel style={
+                  at={(axis description cs:0.95,0.03)},
+                  anchor=north
+                },
+              ytick={0, 2, 15},
+              yticklabels={0, \(1\), \(M\)},
+              ylabel={\small{解のコスト}},
+              ymin=-1,
+              xmax=10.5,
+              xmin=-1.2,
+              width=8cm,
+              height=6cm,
+            ]
+            \addplot[mark size=0.5pt] {15 * pow(0.75, x)} node[
+              pos=0,
+              font=\small,
+              anchor=south
+            ] {$M(1-\delta)^i$};
 
-          \addplot[mark size=0.5pt, dashed] {2};
-          \addplot[only marks, mark=*] coordinates{(0, 15) (0.5, 11) (1, 9) (1.5, 7.5) (2, 5.5) (2.5, 4.5) (3, 3.5)};
-          \node[font=\small] at ([yshift=-3mm]current axis.south) {反復回数};
+            \addplot[mark size=0.5pt, dashed, domain=0:10] {2};
+            \addplot[only marks, mark=*] coordinates{(0, 15) (0.5, 11) (1, 9) (1.5, 7.5) (2, 5.5) (2.5, 4.5) (3, 3.5)};
+            \node[font=\small] at ([yshift=-3mm]current axis.south) {反復回数};
 
-          \draw[<-, decorate]
-          (axis cs:3.2,3.6)
-          -- ++(20.2,10.5)
-          node[right, font=\small] {実際に停止した解};
+            \draw[<-, decorate]
+            (axis cs:3.2,3.6)
+            -- ++(20.2,10.5)
+            node[right, font=\small] {実際に停止した解};
 
-          \draw[<-, decorate]
-          (axis cs:0.5,{15 * pow(0.75, 0.5)})
-          -- ++(15,15)
-          node[right, font=\small]
-            {\(i\) 回反復後の解のコストの上界};
-        \end{axis}
-      \end{tikzpicture}
+            \draw[<-, decorate]
+            (axis cs:0.5,{15 * pow(0.75, 0.5)})
+            -- ++(15,15)
+            node[right, font=\small]
+              {\(i\) 回反復後の解のコストの上界};
+          \end{axis}
+        \end{tikzpicture}
+      }
+      \only<2>{
+        \begin{tikzpicture}[
+            decoration=penciline,
+          ]
+          \begin{axis}[
+              clip=false,
+              domain=-1:10,
+              samples=100,
+              axis lines=middle,
+              xtick={0, 7.5},
+              xticklabels={0, \(\quad k\leftarrow\)},
+              xlabel={\(i\)},
+              xlabel style={
+                  at={(axis description cs:0.95,0.03)},
+                  anchor=north
+                },
+              ytick={0, 2, 15},
+              yticklabels={0, \(1\), \(M\)},
+              ylabel={\small{解のコスト}},
+              ymin=-1,
+              xmax=10.5,
+              xmin=-1.2,
+              width=8cm,
+              height=6cm,
+            ]
+            \addplot[mark size=0.5pt] {15 * pow(0.75, x)} node[
+              pos=0,
+              font=\small,
+              anchor=south
+            ] {$M(1-\delta)^i$};
+
+            \addplot[mark size=0.5pt, dashed, domain=0:10] {2};
+            \addplot[only marks, mark=*] coordinates{(0, 15) (0.5, 11) (1, 9) (1.5, 7.5) (2, 5.5) (2.5, 4.5) (3, 3.5)};
+            \node[font=\small] at ([yshift=-3mm]current axis.south) {反復回数};
+
+            \addplot[mark=*, only marks] coordinates{(7, 2)};
+            \draw[<-, decorate]
+            (axis cs:7,2)
+            -- ++(0,30.5)
+            node[anchor=south, font=\small] {\(k\) の下界 \(\frac{\log{M}}{-\log{(1 - \delta)}}\)};
+
+            \draw[<-, decorate]
+            (axis cs:0.5,{15 * pow(0.75, 0.5)})
+            -- ++(15,15)
+            node[right, font=\small]
+              {\(i\) 回反復後の解のコストの上界};
+          \end{axis}
+        \end{tikzpicture}
+      }
     \end{column}
   \end{columns}
+
+  \note<2>{
+    \begin{itemize}
+      \item より正確には実際に起こり得る反復回数の上界
+    \end{itemize}
+
+  }
 \end{frame}
 
 \begin{frame}{改良点②：近似比解析への影響}
@@ -244,7 +364,7 @@
 
   \textbf{Sketch of the Proof. }
   \only<1>{
-    \begin{block}{\cite{arya2004local} (3 近似)のキーアイデア}
+    \begin{block}{3 近似の証明のキーアイデア}
       局所最適解を任意の近傍解と比較したとき、
       \[
         \text{(施設の開閉に伴うコストの変化)} + \text{(割り当ての変化に伴うコスト)} \alert{\ge 0}

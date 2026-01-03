@@ -19,6 +19,8 @@
 \usepackage{xspace}            % For proper spacing after macros
 \usepackage{thmtools}
 \usepackage{thm-restate}
+\usepackage{fontspec}
+
 \usetikzlibrary{
   calc,
   tikzmark,
@@ -72,8 +74,8 @@
 \newcommand{\DemandSet}{\mathcal{D}}
 \newcommand{\unsafe}{\text{unsafe}}
 \newcommand{\safe}{\text{safe}}
-\newcommand{\isafe}{\info{i_{\text{safe}}}}
-\newcommand{\iunsafe}{\alert{i_{\text{unsafe}}}}
+\newcommand{\isafe}{\info{i}}
+\newcommand{\iunsafe}{\alert{i}}
 
 % Beamer settings
 \usepackage{caption}
@@ -124,7 +126,8 @@
 \subtitle{近似アルゴリズム ―離散最適化問題への効果的アプローチ―}
 \author{岡山 大輝}
 \institute{兵庫県立大学大学院 情報科学研究科\textit{(ad25r010@guh.u-hyogo.ac.jp)}}
-\date{January 5 \& January 12, 2026}
+\date{{January 5, 2026}}
+% \date{January 5 \& January 12, 2026}
 
 \begin{document}
 
@@ -143,7 +146,18 @@
 \section{まとめ}
 
 \begin{frame}{まとめ}
-  容量制約のないメトリック施設配置問題に対して、局所探索法に基づく近似アルゴリズムを示した。
+  容量制約のないメトリック施設配置問題に対して、\\局所探索法に基づく近似アルゴリズムを紹介した。
+
+  \begin{theorem}
+    施設配置問題の局所最適解 \(\localopt\) の総コストは、高々 \(3\OPT\) である。
+  \end{theorem}
+
+  \begin{theorem}[\cite{charikar2005improved}]
+    施設配置問題に対して，任意の定数 \(\varepsilon > 0\) に対し，
+    % \alert{\(\tilde{\mathcal{O}}(n^2/\varepsilon)\)}
+    入力と \(1/\varepsilon\) の多項式時間で \alert{\(1 + \sqrt{2} + \varepsilon\)} 倍の近似解を求めるスキームが存在する．
+  \end{theorem}
+
 \end{frame}
 
 \begin{frame}{容量制約のないメトリック施設配置問題に対する近似アルゴリズムのまとめ}
@@ -202,6 +216,12 @@
     \(I'\) においてコストが高々 \(\gamma \OPT(I')\) である解は、元のインスタンス \(I\) においてコストが高々 \((1 + \varepsilon)\gamma \OPT(I)\) である解に対応する。
   \end{lemma}
 \end{frame}
+
+% \begin{frame}{容量制限のないメトリック施設配置問題に対する局所探索アルゴリズムの歴史}
+%   \begin{itemize}
+%     \item \cite{charikar1999improved}
+%   \end{itemize}
+% \end{frame}
 
 \begin{frame}[allowframebreaks]{References}
   \printbibliography[heading=none]{}
