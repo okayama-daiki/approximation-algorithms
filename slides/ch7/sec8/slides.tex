@@ -132,13 +132,13 @@
 \begin{document}
 
 \begin{frame}
-  \titlepage
+	\titlepage
 \end{frame}
 
 \input{sections/02.tex}
 
 \begin{frame}[standout]
-  Break time!
+	Break time!
 \end{frame}
 
 \input{sections/03.tex}
@@ -146,56 +146,56 @@
 \section{まとめ}
 
 \begin{frame}{まとめ}
-  容量制約のないメトリック施設配置問題に対して、\\局所探索法に基づく近似アルゴリズムを紹介した。
+	容量制約のないメトリック施設配置問題に対して，\\局所探索法に基づく近似アルゴリズムを紹介した．
 
-  \begin{theorem}
-    施設配置問題の局所最適解 \(\localopt\) の総コストは、高々 \(3\OPT\) である。
-  \end{theorem}
+	\begin{theorem}
+		施設配置問題の局所最適解 \(\localopt\) の総コストは，高々 \(3\OPT\) である．
+	\end{theorem}
 
-  \begin{theorem}[\cite{charikar2005improved}]
-    施設配置問題に対して，任意の定数 \(\varepsilon > 0\) に対し，
-    % \alert{\(\tilde{\mathcal{O}}(n^2/\varepsilon)\)}
-    入力と \(1/\varepsilon\) の多項式時間で \alert{\(1 + \sqrt{2} + \varepsilon\)} 倍の近似解を求めるスキームが存在する．
-  \end{theorem}
+	\begin{theorem}[\cite{charikar2005improved}]
+		施設配置問題に対して，任意の定数 \(\varepsilon > 0\) に対し，
+		% \alert{\(\tilde{\mathcal{O}}(n^2/\varepsilon)\)}
+		入力と \(1/\varepsilon\) の多項式時間で \alert{\(1 + \sqrt{2} + \varepsilon\)} 倍の近似解を求めるスキームが存在する．
+	\end{theorem}
 
 \end{frame}
 
 \begin{frame}{容量制約のないメトリック施設配置問題に対する近似アルゴリズムのまとめ}
-  \(n_f = |\FacilitySet|\)、\(n_c = |\DemandSet|, n = n_f + n_c, m = n_fn_c\) とする。
+	\(n_f = |\FacilitySet|\)，\(n_c = |\DemandSet|, n = n_f + n_c, m = n_fn_c\) とする．
 
-  \vskip -1em
-  \small{
-    \begin{table}[]
-      \centering
-      \begin{tabular}{rlcl}
-        \toprule
-                   & Ratio     & Reference                              & Methods / Runtime                    \\
-        \midrule
-        \checkmark & \(4\)     & \cite{shmoys1997approximation}         & LP ラウンディング                           \\
-                   & \(3.16\)  & \cite{shmoys1997approximation}         & LP ラウンディング                           \\
-        \checkmark & \(3\)     & Textbook (\cite{asano2019})            & 乱択 LP ラウンディング                        \\
-                   & \(1.736\) & \cite{chudak2003improved}              & 乱択 LP ラウンディング + α                    \\
-                   & \(1.728\) & \cite{charikar2005improved}            & LP ラウンディング + 双対フィット法                 \\
-        \checkmark & \(3\)     & \cite{jain2001approximation}           & 主双対法 / \(\mathcal{O}(m\log{m})\)     \\
-        \checkmark & \(2\)     & Textbook (\cite{williamson2011design}) & 貪欲法 + 双対フィット法                        \\
-                   & \(1.61\)  & \cite{jain2003greedy}                  & 貪欲法 + 双対フィット法 / \(\mathcal{O}(n^3)\) \\
-                   & \(1.52\)  & \cite{mahdian2006approximation}        & 貪欲法 + スケーリング                         \\
-        \checkmark & \(2.414\) & \cite{arya2004local}                   & 局所探索法                                \\
-        \checkmark & \(2.414\) & \cite{charikar2005improved}            & 局所探索法 + スケーリング                       \\
-                   & \(1.488\) & \cite{li2013a}                         &                                      \\
-        \bottomrule
-      \end{tabular}
-    \end{table}
-  }
+	\vskip -1em
+	\small{
+		\begin{table}[]
+			\centering
+			\begin{tabular}{rlcl}
+				\toprule
+				           & Ratio     & Reference                              & Methods / Runtime                    \\
+				\midrule
+				\checkmark & \(4\)     & \cite{shmoys1997approximation}         & LP ラウンディング                           \\
+				           & \(3.16\)  & \cite{shmoys1997approximation}         & LP ラウンディング                           \\
+				\checkmark & \(3\)     & Textbook (\cite{asano2019})            & 乱択 LP ラウンディング                        \\
+				           & \(1.736\) & \cite{chudak2003improved}              & 乱択 LP ラウンディング + α                    \\
+				           & \(1.728\) & \cite{charikar2005improved}            & LP ラウンディング + 双対フィット法                 \\
+				\checkmark & \(3\)     & \cite{jain2001approximation}           & 主双対法 / \(\mathcal{O}(m\log{m})\)     \\
+				\checkmark & \(2\)     & Textbook (\cite{williamson2011design}) & 貪欲法 + 双対フィット法                        \\
+				           & \(1.61\)  & \cite{jain2003greedy}                  & 貪欲法 + 双対フィット法 / \(\mathcal{O}(n^3)\) \\
+				           & \(1.52\)  & \cite{mahdian2006approximation}        & 貪欲法 + スケーリング                         \\
+				\checkmark & \(2.414\) & \cite{arya2004local}                   & 局所探索法                                \\
+				\checkmark & \(2.414\) & \cite{charikar2005improved}            & 局所探索法 + スケーリング                       \\
+				           & \(1.488\) & \cite{li2013a}                         &                                      \\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+	}
 
-  また \(\mathcal{P} \neq \mathcal{NP}\) のもとで、\(1.463\)-近似アルゴリズムが存在しないことが知られている。
+	また \(\mathcal{P} \neq \mathcal{NP}\) のもとで，\(1.463\)-近似アルゴリズムが存在しないことが知られている．
 
-  \info{
-    \begin{itemize}
-      \item \cite{arya2004local} は STOC'01 で発表
-      \item \cite{charikar1999improved} の局所探索アルゴリズムでは、1 つの施設の追加と 0 個以上の削除を同時に行う近傍を考慮している
-    \end{itemize}
-  }
+	\info{
+		\begin{itemize}
+			\item \cite{arya2004local} は STOC'01 で発表
+			\item \cite{charikar1999improved} の局所探索アルゴリズムでは，1 つの施設の追加と 0 個以上の削除を同時に行う近傍を考慮している
+		\end{itemize}
+	}
 
 \end{frame}
 
@@ -203,18 +203,77 @@
 
 \section{Appendix}
 
-\begin{frame}{コストの離散化テクニック}
+\begin{frame}[label=tight-example-analysis]{タイトな例の近似比の計算}
+	局所最適解の総コストが最適値の少なくとも \(3 - o(1)\) 倍になる例~(\cite{arya2004local})．
 
-  \begin{lemma}[\cite{korte2008combinatorial}]
-    任意のメトリック施設配置問題のインスタンス \(\mathcal{I}\)、\(\gamma_{\max} \ge 1\) および \(0 < \varepsilon \le 1\) に対して、
-    \(\OPT(I) = 0\) であるかどうかを判定でき、そうでない場合には \(\mathcal{O}(|\FacilitySet||\DemandSet|\log{|\FacilitySet||\DemandSet|})\) 時間で別のインスタンス \(\mathcal{I}'\) を構成できる。
-    このとき、すべての施設コストおよび割り当てコストは
-    \[
-      \biggr\{ 0, 1, \ldots, \left\lceil \frac{2\gamma_{\max}(k + |\DemandSet|)^3}{\varepsilon} \right\rceil \biggl\}
-    \]
-    に属する整数であり、さらに任意の \(1 \le \gamma \le \gamma_{\max}\) に対して、
-    \(I'\) においてコストが高々 \(\gamma \OPT(I')\) である解は、元のインスタンス \(I\) においてコストが高々 \((1 + \varepsilon)\gamma \OPT(I)\) である解に対応する。
-  \end{lemma}
+	\begin{definition}[スモールオー]
+		\[
+			f(x) \in o(g(x)) \iff \forall \varepsilon > 0, \exists x_0 > 0 \text{ s.t. } \forall x \ge x_0, |f(x)| < \varepsilon |g(x)|
+		\]
+	\end{definition}
+
+	最適解のコスト: \(k + 1\)，局所最適解のコスト: \(3k + 1\)
+
+	ここで，任意の \(\varepsilon > 0\) に対して，\(k_0 = \lceil 2/\varepsilon \rceil\) とおくと，任意の \(k \ge k_0\) に対して
+	\[
+		\left| 3 - \frac{3k + 1}{k + 1} \right| = \frac{2}{k + 1} \le \frac{2}{\lceil 2/\varepsilon \rceil + 1} \le \frac{2}{2/\varepsilon + 1} < \varepsilon \quad \because \lceil 2/\varepsilon \rceil \ge 2/\varepsilon
+	\]
+
+	よって \(3 - (3k + 1) / (k + 1) \in o(1)\) であるので，局所最適解の総コストは最適値の少なくとも \(3 - o(1)\) 倍になる．
+	\hfill \hyperlink{tight-example}{\beamerbutton{例へ戻る}}
+\end{frame}
+
+\begin{frame}[label=exponential-inequality]{指数関数の基本不等式}
+	\begin{block}{主張}
+		実数 \(x \in [0, 1)\) に対して \( - \log(1 - x) \ge x \) が成り立つ．
+	\end{block}
+
+	\begin{columns}[T]
+		\begin{column}{0.48\textwidth}
+			\textbf{Proof. }
+
+			関数 \(f(x) = -\log(1 - x) - x\) を考える．
+			\(x\in[0,1)\) において
+			\[
+				f'(x) = \frac{1}{1 - x} - 1 = \frac{x}{1 - x} \ge 0
+			\]
+			が成り立つので，\(f\) は単調に増加する．
+			よって \(f(0)=0\) から，任意の \(x\in[0,1)\) に対して
+			\(f(x)\ge 0\) が成り立つ．\hfill\qed
+
+			\hfill \hyperlink{iterations<2>}{\beamerbutton{戻る}}
+		\end{column}
+
+		\begin{column}{0.45\textwidth}
+			\begin{tikzpicture}
+				\begin{axis}[
+						% clip=false,
+						width=\linewidth,
+						height=0.75\textheight,
+						domain=0:0.9,
+						samples=200,
+						axis lines=middle,
+						xlabel={$x$},
+						ylabel={$y$},
+						xmin=-0.1,
+						xmax=1.25,
+						ymin=-0.1,
+						ymax=1,
+					]
+
+					% y = x
+					\addplot[thick] {x}
+					node[pos=0.9, right] {\small{$y=x$}};
+
+					% y = -log(1 - x)
+					\addplot[thick] {-log2(1 - x)}
+					node[pos=0.31, right] {\small{$y = -\log(1-x)$}};
+
+				\end{axis}
+			\end{tikzpicture}
+		\end{column}
+
+	\end{columns}
 \end{frame}
 
 % \begin{frame}{容量制限のないメトリック施設配置問題に対する局所探索アルゴリズムの歴史}
@@ -224,7 +283,7 @@
 % \end{frame}
 
 \begin{frame}[allowframebreaks]{References}
-  \printbibliography[heading=none]{}
+	\printbibliography[heading=none]{}
 \end{frame}
 
 \end{document}
