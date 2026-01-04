@@ -21,6 +21,12 @@
     }
   ],
   "latex-workshop.formatting.latex": "latexindent",
+  "latex-workshop.formatting.latexindent.args": [
+    "-r",
+    "-l",
+    "%WORKSPACE_FOLDER%/localSettings.yaml",
+    "%TMPFILE%"
+  ],
   "workbench.editorAssociations": {
     "*.drawio.png": "hediet.vscode-drawio"
   }
