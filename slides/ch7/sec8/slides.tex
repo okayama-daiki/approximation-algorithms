@@ -88,10 +88,11 @@
 \newtheorem*{sproof}{Sketch of the proof.}
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{observation}[theorem]{Observation}
+\newtheorem{claim}[theorem]{Claim}
 
 % \setbeameroption{hide notes}
 % \setbeameroption{show only notes}
-\setbeameroption{show notes on second screen=right}
+% \setbeameroption{show notes on second screen=right}
 % \includeonlyframes{current}
 
 \newcommand{\info}[1]{\textcolor{ForestGreen}{#1}}
@@ -163,34 +164,54 @@
 \begin{frame}{容量制約のないメトリック施設配置問題に対する近似アルゴリズムのまとめ}
 	\(n_f = |\FacilitySet|\)，\(n_c = |\DemandSet|, n = n_f + n_c, m = n_fn_c\) とする．
 
+	なお \(f(n) \in \tilde{\mathcal{O}}(g(n)) \iff \exists k \in \mathbb{N}\) s.t. \(f(n) \in \mathcal{O}(g(n) \log^k{g(n)})\)．
+
 	\vskip -1em
 	\small{
-		\begin{table}[]
-			\centering
-			\begin{tabular}{rlcl}
-				\toprule
-				           & Ratio     & Reference                              & Methods / Runtime                    \\
-				\midrule
-				\checkmark & \(4\)     & \cite{shmoys1997approximation}         & LP ラウンディング                           \\
-				           & \(3.16\)  & \cite{shmoys1997approximation}         & LP ラウンディング                           \\
-				\checkmark & \(3\)     & Textbook (\cite{asano2019})            & 乱択 LP ラウンディング                        \\
-				           & \(1.736\) & \cite{chudak2003improved}              & 乱択 LP ラウンディング + α                    \\
-				           & \(1.728\) & \cite{charikar2005improved}            & LP ラウンディング + 双対フィット法                 \\
-				\checkmark & \(3\)     & \cite{jain2001approximation}           & 主双対法 / \(\mathcal{O}(m\log{m})\)     \\
-				\checkmark & \(2\)     & Textbook (\cite{williamson2011design}) & 貪欲法 + 双対フィット法                        \\
-				           & \(1.61\)  & \cite{jain2003greedy}                  & 貪欲法 + 双対フィット法 / \(\mathcal{O}(n^3)\) \\
-				           & \(1.52\)  & \cite{mahdian2006approximation}        & 貪欲法 + スケーリング                         \\
-				\checkmark & \(2.414\) & \cite{arya2004local}                   & 局所探索法                                \\
-				\checkmark & \(2.414\) & \cite{charikar2005improved}            & 局所探索法 + スケーリング                       \\
-				           & \(1.488\) & \cite{li2013a}                         &                                      \\
-				\bottomrule
-			\end{tabular}
-		\end{table}
+		\only<1>{
+			\begin{table}[]
+				\centering
+				\begin{tabular}{rlcl}
+					\toprule
+					           & Ratio     & Reference                              & Methods / Runtime                                    \\
+					\midrule
+					\checkmark & \(4\)     & \cite{shmoys1997approximation}         & LP ラウンディング                                           \\
+					           & \(3.16\)  & \cite{shmoys1997approximation}         & LP ラウンディング                                           \\
+					\checkmark & \(3\)     & Textbook (\cite{asano2019})            & 乱択 LP ラウンディング                                        \\
+					           & \(1.736\) & \cite{chudak2003improved}              & 乱択 LP ラウンディング + α                                    \\
+					           & \(1.728\) & \cite{charikar2005improved}            & LP ラウンディング + 双対フィット法                                 \\
+					\checkmark & \(3\)     & \cite{jain2001approximation}           & 主双対法 / \(\mathcal{O}(m\log{m})\)                     \\
+					           & \(1.853\) & \cite{charikar2005improved}            & 主双対法 + 局所探索法 + スケーリング / \(\tilde{\mathcal{O}}(n^3)\) \\
+					\checkmark & \(2\)     & Textbook (\cite{williamson2011design}) & 貪欲法 + 双対フィット法                                        \\
+					           & \(1.61\)  & \cite{jain2003greedy}                  & 貪欲法 + 双対フィット法 / \(\mathcal{O}(n^3)\)                 \\
+					           & \(1.52\)  & \cite{mahdian2006approximation}        & 貪欲法 + スケーリング / \(\tilde{\mathcal{O}}(n)\)            \\
+					\bottomrule
+				\end{tabular}
+			\end{table}
+		}
+
+		\only<2>{
+			\begin{table}[]
+				\centering
+				\begin{tabular}{rlcl}
+					\toprule
+					           & Ratio             & Reference                   & Methods / Runtime                                         \\
+					\midrule
+					\checkmark & \(2.414\)         & \cite{arya2004local}        & 局所探索法 + スケーリング                                            \\
+					           & \(2.414\)         & \cite{charikar2005improved} & 局所探索法 + スケーリング / \(\tilde{\mathcal{O}}(n^2/\varepsilon)\) \\
+					           & \(1.5\)           & \cite{byrka2010optimal}     &                                                           \\
+					           & \(\alert{1.488}\) & \cite{li2013a}              &                                                           \\
+					\bottomrule
+				\end{tabular}
+			\end{table}
+
+			\begin{theorem}[Sviridenko (unpublished)]
+				容量制約のないメトリック施設配置問題に対して \(1.463\)-近似アルゴリズムが存在するならば，\(\mathcal{P} = \mathcal{NP}\) である．
+			\end{theorem}
+		}
 	}
 
-	また \(\mathcal{P} \neq \mathcal{NP}\) のもとで，\(1.463\)-近似アルゴリズムが存在しないことが知られている．
-
-	\info{
+	\note{
 		\begin{itemize}
 			\item \cite{arya2004local} は STOC'01 で発表
 			\item \cite{charikar1999improved} の局所探索アルゴリズムでは，1 つの施設の追加と 0 個以上の削除を同時に行う近傍を考慮している

@@ -387,13 +387,17 @@
 		反復終了時の解の総コストは高々 \(3 / (1 - 2\delta|\FacilitySet|) \times \OPT\) である．
 	\end{block}
 
-	\textbf{Sketch of the Proof. }
 	\only<1>{
+		\textbf{Proof. }
+
 		\begin{block}{3 近似の証明のキーアイデア}
 			局所最適解を任意の近傍解と比較したとき，
-			\[
-				\text{(施設の開閉に伴うコストの変化)} + \text{(割り当ての変化に伴うコスト)} \alert{\ge 0}
-			\]
+			\begin{align*}
+				 & \text{(局所最適解のコスト)} \alert{\le } \text{(近傍解のコスト)}                \\
+				\Rightarrow\quad
+				 & \text{(施設の開閉に伴うコストの変化)} + \text{(再割り当てに伴うコストの変化)} \alert{\ge 0}
+			\end{align*}
+
 		\end{block}
 		この不等式を用いて次の不等式を得た．
 		\begin{align*}
@@ -403,12 +407,15 @@
 	}
 
 	\only<2>{
-		\begin{block}{改良点② における解析}
+		\begin{block}{改良点② における解析でいえること}
 			反復終了時の解を任意の近傍解と比較したとき，
 			\begin{align*}
-				 & \text{(施設の開閉に伴うコストの変化)} + \text{(割り当ての変化に伴うコスト)} \\
+				 & \text{(反復終了時の解のコスト)} \alert{\times (1-\delta) \le } \text{(近傍解のコスト)} \\
+				\Rightarrow\quad
+				 & \text{(施設の開閉に伴うコストの変化)} + \text{(再割り当てに伴うコストの変化)}                    \\
 				 & \alert{\ge - \delta \cdot \text{(反復終了時の解のコスト)}}
 			\end{align*}
+
 		\end{block}
 		この不等式を用いて
 		\begin{align*}
@@ -432,7 +439,7 @@
 
 \end{frame}
 
-\begin{frame}[label=current]{改良点②：近傍への移動に閾値を設ける}
+\begin{frame}{改良点②：近傍への移動に閾値を設ける}
 	\begin{block}{反復回数の上界}
 		コストが全て整数であると仮定する．
 		初期解のコストを \(M\) とすると，反復回数は高々 \(\mathcal{O}(\log{M}/ \delta)\) 回である．

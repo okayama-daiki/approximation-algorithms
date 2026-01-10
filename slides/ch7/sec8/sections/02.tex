@@ -118,7 +118,7 @@
 		が成立する．
 	\end{lemma}
 
-	\begin{theorem}
+	\begin{theorem}[\cite{arya2004local}]
 		施設配置問題の局所最適解 \(\localopt\) の総コストは，高々 \(3\OPT\) である．
 	\end{theorem}
 
@@ -748,26 +748,90 @@
 	\small{
 		中央の二項の和に注目すると，
 		\begin{align*}
-			    & \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \in \phi^{-1}(i) \setminus\{i'\}} (c_{\sigma^*(j)j} - c_{\sigma(j)j}) + \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \in \phi^{-1}(i)} (c_{i'j} - c_{\sigma(j)j})                                    \\
-			=   & \sum_{j \colon \sigma(j) = i \text{ and } \alert{\sigma^*(j) \in \phi^{-1}(i) \setminus\{i'\}}} (c_{\sigma^*(j)j} + c_{i'j} - 2c_{\sigma(j)j}) + \sum_{j \colon \sigma(j) = i \text{ and } \alert{\sigma^*(j) = i'}} (c_{i'j} - c_{\sigma(j)j})                     \\
-			\le & \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \in \phi^{-1}(i) \setminus\{i'\}} (c_{\sigma^*(j)j} + \alert{(c_{\sigma^*(j)j} + 2c_{\sigma(j)j})} - 2c_{\sigma(j)j}) + \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) = i'} \alert{2c_{\sigma^*(j)j}} \\
-			=   & \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \in \phi^{-1}(i) \setminus\{i'\}} 2c_{\sigma^*(j)j} + \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) = i'} 2c_{\sigma^*(j)j}                                                                           \\
-			=   & \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \in \phi^{-1}(i)} 2c_{\sigma^*(j)j}
+			                  & \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \in \phi^{-1}(i) \setminus\{i'\}} (c_{\sigma^*(j)j} - c_{\sigma(j)j}) + \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \in \phi^{-1}(i)} (c_{i'j} - c_{\sigma(j)j})                                                                                        \\
+			=                 & \sum_{j \colon \sigma(j) = i \text{ and } \alert{\sigma^*(j) \in \phi^{-1}(i) \setminus\{i'\}}} (c_{\sigma^*(j)j} + c_{i'j} - 2c_{\sigma(j)j}) + \sum_{j \colon \sigma(j) = i \text{ and } \alert{\sigma^*(j) = i'}} (c_{i'j} - c_{\sigma(j)j})                                                                         \\
+			\uncover<2->{	\le & \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \in \phi^{-1}(i) \setminus\{i'\}} (c_{\sigma^*(j)j} + \alert{(c_{\sigma^*(j)j} + 2c_{\sigma(j)j})} - 2c_{\sigma(j)j}) + \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) = i'} \alert{2c_{\sigma^*(j)j}} \\}
+			\uncover<5>{=     & \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \in \phi^{-1}(i) \setminus\{i'\}} 2c_{\sigma^*(j)j} + \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) = i'} 2c_{\sigma^*(j)j}                                                                                                     \\}
+			\uncover<5>{=     & \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \in \phi^{-1}(i)} 2c_{\sigma^*(j)j}}
 		\end{align*}
 
-		最終的に次式を得る．
-		\(f_{i} \le \sum_{i^* \in \phi^{-1}(i)} f_{i^*} + \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \in \phi^{-1}(i)} 2c_{\sigma^*(j)j} + \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \notin \phi^{-1}(i)} 2c_{\sigma^*(j)j} \)
+		\uncover<5>{
+			最終的に次式を得る．
+			\(f_{i} \le \sum_{i^* \in \phi^{-1}(i)} f_{i^*} + \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \in \phi^{-1}(i)} 2c_{\sigma^*(j)j} + \sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \notin \phi^{-1}(i)} 2c_{\sigma^*(j)j} \)
+		}
 	}
 
+	\only<2-4>{
+		\begin{tikzpicture}[
+				remember picture,
+				overlay,
+				box/.style={
+						draw,
+						rectangle,
+					},
+				decoration=penciline,
+			]
+			\node[
+				decorate,
+				box,
+				anchor=south east,
+				fill=white,
+				thick,
+				inner sep=6pt,
+				text width=0.6\linewidth
+			] at ([xshift=-20pt,yshift=10pt]current page.south east)
+			{
+				\small
+				\begin{minipage}{0.55\linewidth}
 
-	\note{
+
+					\only<2>{
+						\(c_{i'j}\) について，
+						三角不等式より
+						\[
+							c_{i'j} \le c_{i'\alert{\sigma(j)}} + c_{\alert{\sigma(j)}j}
+						\]
+					}
+					\only<3>{\(i'\) の定義より
+						\begin{align*}
+							c_{i'j} & \le c_{i'\sigma(j)} + c_{\sigma(j)j}                  \\
+							        & \le c_{\alert{\sigma^*(j)}\sigma(j)} + c_{\sigma(j)j} \\
+						\end{align*}
+					}
+					\only<4>{再度三角不等式より
+						\begin{align*}
+							c_{i'j} & \le c_{i'\sigma(j)} + c_{\sigma(j)j}                                     \\
+							        & \le c_{\sigma^*(j)\sigma(j)} + c_{\sigma(j)j}                            \\
+							        & \le (c_{\sigma^*(j)\alert{j}} + c_{\alert{j}\sigma(j)}) + c_{\sigma(j)j} \\
+						\end{align*}
+					}
+				\end{minipage}
+				\hfill
+				\begin{minipage}{0.40\linewidth}
+					\centering
+					\only<2>{\includegraphics[width=\linewidth]{figures/lemma7-10/triangle-inequality-01.drawio.png}}
+					\only<3>{\includegraphics[width=\linewidth]{figures/lemma7-10/triangle-inequality-02.drawio.png}}
+					\only<4>{\includegraphics[width=\linewidth]{figures/lemma7-10/triangle-inequality-03.drawio.png}}
+				\end{minipage}
+			};
+		\end{tikzpicture}
+
+	}
+
+	\note<1>{
 		\begin{itemize}
-			\item 最初の等式変形は，\(\sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \in \phi^{-1}(i)} \) の和を，\(\sigma^*(j) = i'\) とそれ以外に分けたもの
+			\item \(\sum_{j \colon \sigma(j) = i \text{ and } \sigma^*(j) \in \phi^{-1}(i)} \) の和を，\(\sigma^*(j) = i'\) とそれ以外に分けたもの
 			\item 次の不等式について，
 			      \begin{itemize}
 				      \item \(c_{i'j} \le c_{i'\sigma(j)} + c_{\sigma(j)j} \le c_{\sigma^*(j)\sigma(j)} + c_{\sigma^(j)j} \le (c_{\sigma^*(j)j} + c_{j\sigma(j)}) + c_{\sigma(j)j} = c_{\sigma^*(j)j} + 2c_{\sigma(j)j}\) に関しては三角不等式と \(i'\) の定義を用いる
 				      \item \(c_{i'j} - c_{\sigma(j)j} \le 2c_{\sigma^*(j)j}\) に関してはシンプルに \(c_{i'j} - c_{\sigma(j)j} \le c_{i'j} \le 2c_{i'j} = 2c_{\sigma^*(j)j}\)
 			      \end{itemize}
+		\end{itemize}
+	}
+
+	\note<2-4>{
+		\begin{itemize}
+			\item \(c_{i'j} - c_{\sigma(j)j} \le 2c_{\sigma^*(j)j}\) に関してはシンプルに \(c_{i'j} - c_{\sigma(j)j} \le c_{i'j} \le 2c_{i'j} = 2c_{\sigma^*(j)j}\)
 		\end{itemize}
 	}
 \end{frame}
